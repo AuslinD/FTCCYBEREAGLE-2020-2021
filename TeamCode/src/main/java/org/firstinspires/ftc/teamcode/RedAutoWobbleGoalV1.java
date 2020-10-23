@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-public class AutoWobbleGoalV1 extends AutoMethods {
+@Autonomous(name = "RedAuto", group = "Auto")
+public class RedAutoWobbleGoalV1 extends AutoMethods {
 
     private ElapsedTime runtime = new ElapsedTime();
 
