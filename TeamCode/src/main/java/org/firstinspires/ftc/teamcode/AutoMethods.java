@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import java.util.*;
+
 public class AutoMethods extends LinearOpMode {
     DcMotor fl;
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
+
     public void MoveInch(double speed){
         fl.setPower(speed);
         bl.setPower(speed);
@@ -94,29 +97,4 @@ public class AutoMethods extends LinearOpMode {
     }
 }
 
-
- public  void ChangeState(String nextState)
-    {
-        // nextatse is moveforward1
-        // allstates index 0 moveforward2
-        // alstate idex 1 mo
-        allStates.add(nextState);
-        // index 0 of allstate = moveForward
-        for (int i = 0; i < allStates.size(); i++)
-        {
-            if (nextState == allStates.get(i))
-            {
-                //telemetry.addData ("staterepeats", nextState);
-            }
-            else if (i > allStates.size() - 1)
-            {
-                state = nextState;
-            }
-        }
-        ///// There will be more stuff here once we progress..
-
-    }
-
-
-}
 

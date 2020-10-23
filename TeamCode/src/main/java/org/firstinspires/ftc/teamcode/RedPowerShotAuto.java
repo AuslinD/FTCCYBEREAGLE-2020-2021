@@ -9,12 +9,28 @@ public class RedPowerShotAuto extends AutoMethods {
         ready();
 
         while (!isStopRequested() && opModeIsActive()){
-            StrafeRight(-1, 1213);
-            sleep(1000);
-            MoveInchEncoder(1, 1234);
-            sleep(1000);
-            // shoot the powershot
-            MoveInchEncoder(1,100);
+            StateMachine sm = new StateMachine();
+            sm.ChangeState("StrafeRight",1000);
+            if(sm.state == "StrafeRight"){
+                StrafeRight(-1, 1213);
+                sm.ChangeState("MoveInch",1000);
+            }
+
+
+            if(sm.state == "MoveInch"){
+                MoveInchEncoder(1, 1234);
+                sm.ChangeState("ShootDisc", 1000);
+            }
+
+            if(sm.state == "ShootDisc") {
+                // shoot the powershot
+                sm.ChangeState("MoveInch", 1000);
+            }
+            if(sm.state == "MoveInch"){
+                MoveInchEncoder(1, 100);
+
+            }
+
         }
 
     }
