@@ -14,6 +14,11 @@ public class AutoMethods extends LinearOpMode {
         fr.setPower(-speed);
         br.setPower(-speed);
     }
+    
+
+
+
+
 
     public void MoveInchEncoder(double speed, double ticks){
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,3 +93,17 @@ public class AutoMethods extends LinearOpMode {
 
     }
 }
+
+
+public class StateMachine {
+
+    public String state;
+
+    public  void ChangeState(String nextState)
+    {
+        ///// There will be more stuff here once we progress..
+        state = nextState;
+    }
+
+}
+
