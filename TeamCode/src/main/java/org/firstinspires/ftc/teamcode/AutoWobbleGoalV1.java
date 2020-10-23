@@ -22,7 +22,7 @@ public class AutoWobbleGoalV1 extends AutoMethods {
             telemetry.update();
             sleep(1000);
 
-            targetZone = 'A'; //delete this
+            targetZone = 'A'; //delete this delete this delete this delete this delete this delete this delete this delete this
 
             //Put scan thing here
 
