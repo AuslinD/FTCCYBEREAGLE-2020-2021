@@ -7,67 +7,104 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         ready();
 
+
+        waitForStart();
+
+        char targetZone;
+
         while (!isStopRequested() && opModeIsActive()){
-            waitForStart();
-
-            char targetZone;
-
-
+            StateMachine sm = new StateMachine();
+            sm.ChangeState("MoveInch");
+            if(sm.state == "MoveInch") {
                 MoveInchEncoder(1, 1380);//put ticks in
-                telemetry.addData("Running MoveInchEncoder", "complete");
-                telemetry.update();
-                sleep(1000);
+                sm.ChangeState("scan");
 
-                targetZone = 'A'; //delete this delete this delete this delete this delete this delete this delete this delete this
+            }
 
-                //Put scan thing here
-
-                StrafeRight(-1,1239);//change this!
-
-                //pick up the wobble goal
+            if(sm.state == "scan"){
+                //put scan thing here
+                sm.ChangeState("StrafeLeft");
+            }
 
 
-                switch(targetZone) {
-                    case 'A':
-                        telemetry.addData("targetZone", "A");
-                        telemetry.update();
-                        MoveInchEncoder(1,1000);
-                        sleep(2000);
+            targetZone = 'A'; //delete this delete this delete this delete this delete this delete this delete this delete this
+
+
+            if(sm.state == "StrafeLeft") {
+
+                StrafeRight(-1, 1239);//change this!
+            }
+
+            //pick up the wobble goal
+
+
+            switch(targetZone) {
+                case 'A':
+                    telemetry.addData("targetZone", "A");
+                    telemetry.update();
+
+                    sm.ChangeState("MoveInch");
+
+                    if(sm.state == "MoveInch") {
+                        MoveInchEncoder(1, 1000);
+                        sm.ChangeState("DropWobble");
+
+                    }
+
+                    if(sm.state == "DropWobble") {
                         //drop wobble goal
 
+                    }
 
-                        break;
-                    case 'B':
-                        telemetry.addData("targetZone", "B");
-                        telemetry.update();
-                        MoveInchEncoder(1,1500);
-                        sleep(3000);
+
+
+                    break;
+                case 'B':
+                    telemetry.addData("targetZone", "B");
+                    telemetry.update();
+                    sm.ChangeState("MoveInch");
+                    if(sm.state == "MoveInch") {
+                        MoveInchEncoder(1, 1500);
+                        sm.ChangeState("DropWobble");
+                    }
+
+                    if(sm.state == "DropWobble") {
                         //drop wobble goal
+                        sm.ChangeState("MoveInch");
+                    }
+                    if(sm.state == "MoveInch") {
                         MoveInchEncoder(-1, -256);
-                        break;
-                    case 'C':
-                        telemetry.addData("targetZone", "C");
-                        telemetry.update();
-                        MoveInchEncoder(1,2000);
-                        sleep(3500);
+                    }
+                    break;
+                case 'C':
+                    telemetry.addData("targetZone", "C");
+                    telemetry.update();
+                    sm.ChangeState("MoveInch");
+                    if(sm.state == "MoveInch") {
+                        MoveInchEncoder(1, 2000);
+                        sm.ChangeState("DropWobble");
+                    }
+                    if(sm.state == "DropWobble") {
                         //drop wobble goal
+                        sm.ChangeState("MoveInch");
+                    }
+                    if(sm.state == "MoveInch") {
                         MoveInchEncoder(-1, -512);
-                        break;
+                    }
+                    break;
 
-
-
-                }
 
 
             }
-            fl.setPower(0);
-            fr.setPower(0);
-            bl.setPower(0);
-            br.setPower(0);
 
+
+        }
+        fl.setPower(0);
+        fr.setPower(0);
+        bl.setPower(0);
+        br.setPower(0);
 
     }
 }

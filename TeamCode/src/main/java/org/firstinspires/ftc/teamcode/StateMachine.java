@@ -5,7 +5,7 @@ import java.util.List;
 public class StateMachine extends AutoMethods{
     public List<String> allStates;
     public String state;
-    public  void ChangeState(String nextState, int sleeptime)
+    public  void ChangeState(String nextState)
     {
         // nextatse is moveforward1
         // allstates index 0 moveforward2
@@ -20,10 +20,15 @@ public class StateMachine extends AutoMethods{
             }
             else if (i >= allStates.size() - 1)
             {
+
+                telemetry.addData("I'm at ", state);
+                telemetry.addData( "going to state", nextState);
+                telemetry.update();
                 state = nextState;
-                sleep(sleeptime);
+
 
             }
+
         }
         ///// There will be more stuff here once we progress..
 

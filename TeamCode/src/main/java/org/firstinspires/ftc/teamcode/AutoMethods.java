@@ -49,6 +49,7 @@ public class AutoMethods extends LinearOpMode {
         }
 
 
+
     }
     public void StrafeRight(double speed,double ticks ){
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
