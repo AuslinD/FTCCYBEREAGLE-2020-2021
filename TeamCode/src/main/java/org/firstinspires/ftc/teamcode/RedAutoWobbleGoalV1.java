@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-@Autonomous(name = "RedAuto", group = "Auto")
-public class RedAutoWobbleGoalV1 extends AutoMethods {
 
-    private ElapsedTime runtime = new ElapsedTime();
+@Autonomous(name = "RedAuto", group = "Auto")
+public class RedAutoWobbleGoalV1 extends AutoMethods{
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -22,17 +19,13 @@ public class RedAutoWobbleGoalV1 extends AutoMethods {
             sm.ChangeState("MoveInch");
             if(sm.state == "MoveInch") {
                 MoveInchEncoder(1, 1380);//put ticks in
-                telemetry.addData("Running MoveInchEncoder", "complete");
-                telemetry.update();
-
                 sm.ChangeState("scan");
-
 
             }
 
             if(sm.state == "scan"){
                 //put scan thing here
-                sm.ChangeState("StrafeRight", 1000);
+                sm.ChangeState("StrafeLeft");
             }
 
 
@@ -41,24 +34,28 @@ public class RedAutoWobbleGoalV1 extends AutoMethods {
 
             if(sm.state == "StrafeRight") {
 
-                StrafeRight(1, 1239);//change this!
-            }
+                        StrafeRight(1, 1239);//change this!
+                    }
 
-            //pick up the wobble goal
+                    //pick up the wobble goal
 
 
-            switch(targetZone) {
-                case 'A':
-                    telemetry.addData("targetZone", "A");
-                    telemetry.update();
-                    sm.ChangeState("MoveInch", 2000);
-                    if(sm.state == "MoveInch") {
-                        MoveInchEncoder(1, 1000);
-                        sm.ChangeState("DropWobble", 1000);
+                    switch(targetZone) {
+                        case 'A':
+                            telemetry.addData("targetZone", "A");
+                            telemetry.update();
+
+                            sm.ChangeState("MoveInch");
+
+                            if(sm.state == "MoveInch") {
+                                MoveInchEncoder(1, 1000);
+                                sm.ChangeState("DropWobble");
+
                     }
 
                     if(sm.state == "DropWobble") {
                         //drop wobble goal
+
                     }
 
 
@@ -67,15 +64,15 @@ public class RedAutoWobbleGoalV1 extends AutoMethods {
                 case 'B':
                     telemetry.addData("targetZone", "B");
                     telemetry.update();
-                    sm.ChangeState("MoveInch", 3000);
+                    sm.ChangeState("MoveInch");
                     if(sm.state == "MoveInch") {
                         MoveInchEncoder(1, 1500);
-                        sm.ChangeState("DropWobble", 1000);
+                        sm.ChangeState("DropWobble");
                     }
 
                     if(sm.state == "DropWobble") {
                         //drop wobble goal
-                        sm.ChangeState("MoveInch", 1000);
+                        sm.ChangeState("MoveInch");
                     }
                     if(sm.state == "MoveInch") {
                         MoveInchEncoder(-1, -256);
@@ -84,14 +81,14 @@ public class RedAutoWobbleGoalV1 extends AutoMethods {
                 case 'C':
                     telemetry.addData("targetZone", "C");
                     telemetry.update();
-                    sm.ChangeState("MoveInch", 3500);
+                    sm.ChangeState("MoveInch");
                     if(sm.state == "MoveInch") {
                         MoveInchEncoder(1, 2000);
-                        sm.ChangeState("DropWobble", 1000);
+                        sm.ChangeState("DropWobble");
                     }
                     if(sm.state == "DropWobble") {
                         //drop wobble goal
-                        sm.ChangeState("MoveInch", 1000);
+                        sm.ChangeState("MoveInch");
                     }
                     if(sm.state == "MoveInch") {
                         MoveInchEncoder(-1, -512);

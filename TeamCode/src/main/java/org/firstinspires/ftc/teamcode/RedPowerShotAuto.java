@@ -6,32 +6,27 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class RedPowerShotAuto extends AutoMethods {
     @Override
     public void runOpMode() throws InterruptedException {
-        ready();
 
+        ready();
         while (!isStopRequested() && opModeIsActive()){
             StateMachine sm = new StateMachine();
-            sm.ChangeState("StrafeRight",1000);
-            if(sm.state == "StrafeRight"){
-                StrafeRight(-1, 1213);
-                sm.ChangeState("MoveInch",1000);
+            sm.ChangeState("StrafeRight");
+            if(sm.state == "StrafeLeft") {
+                StrafeRight(-1, 2132);
+                sm.ChangeState("MoveInch");
             }
-
-
-            if(sm.state == "MoveInch"){
-                MoveInchEncoder(1, 1234);
-                sm.ChangeState("ShootDisc", 1000);
+            if(sm.state == "MoveInch") {
+                MoveInchEncoder(1, 1231);
+                sm.ChangeState("Shootdisc");
             }
-
-            if(sm.state == "ShootDisc") {
-                // shoot the powershot
-                sm.ChangeState("MoveInch", 1000);
+            if(sm.state == "Shootdisc") {
+                //shoot the disc things
+                sm.ChangeState("MoveInch");
             }
-            if(sm.state == "MoveInch"){
+            if(sm.state == "MoveInch") {
                 MoveInchEncoder(1, 100);
-
             }
 
         }
-
     }
 }
