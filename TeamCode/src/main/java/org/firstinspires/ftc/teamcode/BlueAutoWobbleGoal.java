@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "BlueAuto", group = "Auto")
-public class BlueAutoWobbleGoalV1 extends AutoMethods{
+@Autonomous(name = "WobbleBlue", group = "Auto")
+public class BlueAutoWobbleGoal extends AutoMethods{
 
     @Override
     public void runOpMode() throws InterruptedException {
