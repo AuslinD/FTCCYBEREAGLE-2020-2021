@@ -1,10 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import java.util.List;
 
 public class StateMachine extends AutoMethods{
     public List<String> allStates;
     public String state;
+    DcMotor fl;
+    DcMotor fr;
+    DcMotor bl;
+    DcMotor br;
+
     public  void ChangeState(String nextState)
     {
         // nextatse is moveforward1
@@ -21,9 +28,9 @@ public class StateMachine extends AutoMethods{
             else if (i >= allStates.size() - 1)
             {
 
-                telemetry.addData("I'm at ", state);
-                telemetry.addData( "going to state", nextState);
-                telemetry.update();
+              //  telemetry.addData("I'm at ", state);
+                //telemetry.addData( "going to state", nextState);
+               // telemetry.update();
                 state = nextState;
 
 
@@ -31,6 +38,18 @@ public class StateMachine extends AutoMethods{
 
         }
         ///// There will be more stuff here once we progress..
+
+    }
+
+    public void ChangeValues(long sleepTime)
+    {
+        if (time.milliseconds() < sleepTime)
+        {
+            fl.setPower(0);
+            fr.setPower(0);
+            bl.setPower(0);
+            br.setPower(0);
+        }
 
     }
 

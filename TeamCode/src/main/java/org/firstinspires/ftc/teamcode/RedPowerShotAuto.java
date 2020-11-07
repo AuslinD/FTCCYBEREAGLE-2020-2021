@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous
-public class RedPowerShotAuto extends AutoMethods {
+public class RedPowerShotAuto extends MasterClass {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        ready();
+
         while (!isStopRequested() && opModeIsActive()){
+            Initialize();
             StateMachine sm = new StateMachine();
             sm.ChangeState("StrafeRight");
             if(sm.state == "StrafeLeft") {
-                StrafeRight(-1, 2132);
+                autoMethods.StrafeRight(-1, 2132);
                 sm.ChangeState("MoveInch");
             }
             if(sm.state == "MoveInch") {
-                MoveInchEncoder(1, 1231);
+                autoMethods.MoveInchEncoder(1, 1231);
                 sm.ChangeState("Shootdisc");
             }
             if(sm.state == "Shootdisc") {
@@ -24,7 +26,7 @@ public class RedPowerShotAuto extends AutoMethods {
                 sm.ChangeState("MoveInch");
             }
             if(sm.state == "MoveInch") {
-                MoveInchEncoder(1, 100);
+                autoMethods.MoveInchEncoder(1, 100);
             }
 
         }

@@ -3,21 +3,21 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name = "Powershot", group = "Auto")
-public class BluePowerShotAuto extends AutoMethods {
+public class BluePowerShotAuto extends MasterClass {
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        ready();
         while (!isStopRequested() && opModeIsActive()){
+            Initialize();
             StateMachine sm = new StateMachine();
             sm.ChangeState("StrafeRight");
             if(sm.state == "StrafeRight") {
-                StrafeRight(1, 2132);
+                autoMethods.StrafeRight(1, 2132);
                 sm.ChangeState("MoveInch");
             }
             if(sm.state == "MoveInch") {
-                MoveInchEncoder(1, 1231);
+                autoMethods.MoveInchEncoder(1, 1231);
                 sm.ChangeState("Shootdisc");
             }
             if(sm.state == "Shootdisc") {
@@ -25,7 +25,7 @@ public class BluePowerShotAuto extends AutoMethods {
                 sm.ChangeState("MoveInch");
             }
             if(sm.state == "MoveInch") {
-                MoveInchEncoder(1, 100);
+                autoMethods.MoveInchEncoder(1, 100);
             }
 
         }

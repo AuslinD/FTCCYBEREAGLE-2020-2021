@@ -3,24 +3,22 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name = "BlueAuto", group = "Auto")
-public class BlueAutoWobbleGoalV1 extends AutoMethods{
+public class BlueAutoWobbleGoalV1 extends MasterClass{
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        ready();
-
+    public void runOpMode() {
 
         waitForStart();
 
         char targetZone;
 
         while (!isStopRequested() && opModeIsActive()){
+            Initialize();
             StateMachine sm = new StateMachine();
             sm.ChangeState("MoveInch");
             if(sm.state == "MoveInch") {
-                MoveInchEncoder(1, 1380);//put ticks in
+                autoMethods.MoveInchEncoder(1, 1380);//put ticks in
                 sm.ChangeState("scan");
-
             }
 
             if(sm.state == "scan"){
@@ -34,7 +32,7 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
 
             if(sm.state == "StrafeLeft") {
 
-                StrafeRight(-1, 1239);//change this!
+                autoMethods.StrafeRight(-1, 1239);//change this!
             }
 
             //pick up the wobble goal
@@ -48,7 +46,7 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
                     sm.ChangeState("MoveInch");
 
                     if(sm.state == "MoveInch") {
-                        MoveInchEncoder(1, 1000);
+                        autoMethods.MoveInchEncoder(1, 1000);
                         sm.ChangeState("DropWobble");
 
                     }
@@ -66,7 +64,7 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
                     telemetry.update();
                     sm.ChangeState("MoveInch");
                     if(sm.state == "MoveInch") {
-                        MoveInchEncoder(1, 1500);
+                        autoMethods.MoveInchEncoder(1, 1500);
                         sm.ChangeState("DropWobble");
                     }
 
@@ -75,7 +73,7 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
                         sm.ChangeState("MoveInch");
                     }
                     if(sm.state == "MoveInch") {
-                        MoveInchEncoder(-1, -256);
+                        autoMethods.MoveInchEncoder(-1, -256);
                     }
                     break;
                 case 'C':
@@ -83,7 +81,7 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
                     telemetry.update();
                     sm.ChangeState("MoveInch");
                     if(sm.state == "MoveInch") {
-                        MoveInchEncoder(1, 2000);
+                        autoMethods.MoveInchEncoder(1, 2000);
                         sm.ChangeState("DropWobble");
                     }
                     if(sm.state == "DropWobble") {
@@ -91,7 +89,7 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
                         sm.ChangeState("MoveInch");
                     }
                     if(sm.state == "MoveInch") {
-                        MoveInchEncoder(-1, -512);
+                        autoMethods.MoveInchEncoder(-1, -512);
                     }
                     break;
 
@@ -101,10 +99,5 @@ public class BlueAutoWobbleGoalV1 extends AutoMethods{
 
 
         }
-        fl.setPower(0);
-        fr.setPower(0);
-        bl.setPower(0);
-        br.setPower(0);
-
     }
 }

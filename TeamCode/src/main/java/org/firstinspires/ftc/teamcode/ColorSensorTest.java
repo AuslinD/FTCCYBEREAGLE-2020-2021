@@ -20,7 +20,7 @@ import android.view.View;
 
 
 @Autonomous(name = "BlueAuto", group = "Auto")
-public class ColorSensorTest extends LinearOpMode {
+public class ColorSensorTest extends MasterClass {
     String block;
 
     ColorSensor color;
