@@ -14,11 +14,11 @@ import java.util.*;
 
 public class AutoMethods {
     DcMotor fl;
-    DcMotor C1;
-    DcMotor C2;
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
+    DcMotor C1;
+    DcMotor C2;
     public ElapsedTime time = new ElapsedTime();
 
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends OpMode {
     DcMotor fl;
     DcMotor fr;
@@ -47,6 +48,13 @@ public class TeleOp extends OpMode {
                 bl.setPower(BLP);
             }
 
+        }
+        else
+        {
+            fl.setPower(0);
+            fr.setPower(0);
+            br.setPower(0);
+            bl.setPower(0);
         }
 
     }

@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 public class NavigationMethods {
     ColorSensor colorSensor;
+    DistanceSensor distanceSensor;
     int[] colorVals;
     int blackMaxThresh = 50;
     int minHueVal = 110;
@@ -42,8 +48,13 @@ public class NavigationMethods {
             }
         }
     }
+    public double ReturnDist()
+    {
+        return distanceSensor.getDistance(DistanceUnit.CM);
+    }
     public void initNav(MasterClass masterClass)
     {
-        colorSensor = masterClass.hardwareMap.get(ColorSensor.class, "colorsensor");
+        //colorSensor = masterClass.hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        distanceSensor = masterClass.hardwareMap.get(LynxI2cColorRangeSensor.class, "sensor_color_distance");
     }
 }
