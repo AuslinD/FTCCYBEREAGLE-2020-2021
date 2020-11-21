@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "RedAuto", group = "Auto")
 public class RedAutoWobbleGoalV1 extends MasterClass{
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         waitForStart();
 
         char targetZone;
