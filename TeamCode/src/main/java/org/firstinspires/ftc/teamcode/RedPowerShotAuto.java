@@ -3,8 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+<<<<<<< Updated upstream
 @Autonomous
 public class RedPowerShotAuto extends MasterClass {
+=======
+<<<<<<< HEAD
+@Autonomous(name="")
+public class RedPowerShotAuto extends AutoMethods {
+=======
+@Autonomous
+public class RedPowerShotAuto extends MasterClass {
+>>>>>>> bb9089a57986500d9ceaa7617709360eb84ae231
+>>>>>>> Stashed changes
     @Override
     public void runOpMode() throws InterruptedException {
 
