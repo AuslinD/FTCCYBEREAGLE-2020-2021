@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class NavigationMethods {
     ColorSensor colorSensor;
     DistanceSensor distanceSensor;
-    int[] colorVals;
+    public int[] colorVals = new int[3];
     int blackMaxThresh = 50;
     int minHueVal = 110;
 
@@ -39,22 +40,25 @@ public class NavigationMethods {
                 return "green";
             }
             else if (colorVals[2] > blueDiff + 15 && colorVals[2] > minHueVal)
-            {
+                {
                 return "blue";
             }
             else
             {
-                return "";
+                return "grey";
             }
         }
     }
     public double ReturnDist()
     {
-        return distanceSensor.getDistance(DistanceUnit.CM);
+       // return distanceSensor.getDistance(DistanceUnit.CM);
+        return 0;
     }
     public void initNav(MasterClass masterClass)
     {
-        //colorSensor = masterClass.hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        distanceSensor = masterClass.hardwareMap.get(LynxI2cColorRangeSensor.class, "sensor_color_distance");
+        colorSensor = masterClass.hardwareMap.get(ColorSensor.class, "sensor_color");
+        //distanceSensor = masterClass.hardwareMap.get(LynxI2cColorRangeSensor.class, "sensor_color_distance");
+        masterClass.telemetry.addData("hi",  colorSensor);
+        masterClass.telemetry.update();
     }
 }
