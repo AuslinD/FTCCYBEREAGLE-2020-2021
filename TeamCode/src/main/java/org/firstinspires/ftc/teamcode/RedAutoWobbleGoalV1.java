@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@Autonomous(name = "RedAuto", group = "Auto")
+@Autonomous(name = "RedWobble", group = "Auto")
 public class RedAutoWobbleGoalV1 extends MasterClass{
     @Override
     public void runOpMode() {

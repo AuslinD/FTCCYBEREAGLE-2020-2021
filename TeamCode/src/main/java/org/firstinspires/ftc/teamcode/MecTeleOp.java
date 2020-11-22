@@ -4,16 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp.java
-=======
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/MecTeleOp.java
-@TeleOp
+
+@TeleOp(name="MecTeleOp", group = "TeleOp")
 public class MecTeleOp extends OpMode {
-=======
->>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/MecTeleOp.java
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class TeleOp extends OpMode {
->>>>>>> bb9089a57986500d9ceaa7617709360eb84ae231:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp.java
     DcMotor fl;
     DcMotor fr;
     DcMotor bl;
@@ -58,26 +51,14 @@ public class TeleOp extends OpMode {
             }
 
         }
-<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp.java
-=======
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/MecTeleOp.java
+
         else{
             fl.setPower(0);
             bl.setPower(0);
             fr.setPower(0);
             br.setPower(0);
-=======
->>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/MecTeleOp.java
-        else
-        {
-            fl.setPower(0);
-            fr.setPower(0);
-            br.setPower(0);
-            bl.setPower(0);
-<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp.java
-=======
->>>>>>> bb9089a57986500d9ceaa7617709360eb84ae231:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp.java
->>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/MecTeleOp.java
+
+
         }
 
     }

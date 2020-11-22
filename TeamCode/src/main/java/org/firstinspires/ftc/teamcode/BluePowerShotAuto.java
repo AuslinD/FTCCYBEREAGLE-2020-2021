@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Powershot", group = "Auto")
+@Autonomous(name = "BluePowershot", group = "Auto")
 public class BluePowerShotAuto extends MasterClass {
 
     @Override
