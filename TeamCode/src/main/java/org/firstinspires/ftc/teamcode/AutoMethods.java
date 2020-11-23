@@ -20,6 +20,7 @@ public class AutoMethods {
     DcMotor C1;
     DcMotor C2;
     public ElapsedTime time = new ElapsedTime();
+    NavigationMethods navigationMethods = new NavigationMethods();
 
 
 
@@ -87,7 +88,33 @@ public class AutoMethods {
     }
 
 
-
+    public void ColorMove(String desiredColor, float speed, boolean careSaturation)
+    {
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (!careSaturation) {
+            while (navigationMethods.readColor()[1] != desiredColor) {
+                fl.setPower(speed);
+                fr.setPower(speed);
+                bl.setPower(speed);
+                br.setPower(speed);
+            }
+        }
+        if (careSaturation) {
+            while (navigationMethods.readColor()[0] + navigationMethods.readColor()[1] != desiredColor) {
+                fl.setPower(speed);
+                fr.setPower(speed);
+                bl.setPower(speed);
+                br.setPower(speed);
+            }
+        }
+    }
 
 
     public void StrafeRight(double speed,double ticks ){

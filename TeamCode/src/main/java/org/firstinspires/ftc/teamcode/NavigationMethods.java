@@ -23,7 +23,7 @@ public class NavigationMethods {
     String saturation;
     String hue;
 
-    public String readColor()
+    public String[] readColor()
     {
         colorVals[0] = colorSensor.red();
         colorVals[1] = colorSensor.green();
@@ -34,11 +34,11 @@ public class NavigationMethods {
             {
                 if (hsvVals[1] > .5)
                 {
-                    saturation = "pure";
+                    saturation = "pure ";
                 }
                 else
                 {
-                    saturation = "light";
+                    saturation = "light ";
                 }
                 hue = "red";
             }
@@ -46,11 +46,11 @@ public class NavigationMethods {
             {
                 if (hsvVals[1] > .5)
                 {
-                    saturation = "pure";
+                    saturation = "pure ";
                 }
                 else
                 {
-                    saturation = "light";
+                    saturation = "light ";
                 }
                 hue = "green";
             }
@@ -58,11 +58,11 @@ public class NavigationMethods {
                 {
                     if (hsvVals[1] > .5)
                     {
-                        saturation = "pure";
+                        saturation = "pure ";
                     }
                     else
                     {
-                        saturation = "light";
+                        saturation = "light ";
                     }
                     hue = "blue";
                 }
@@ -75,7 +75,10 @@ public class NavigationMethods {
         {
             hue = "black";
         }
-        return saturation + hue;
+        String colors[] = new String[2];
+        colors[0] = saturation;
+        colors[1] = hue;
+        return colors;
     }
     public double ReturnDist()
     {
