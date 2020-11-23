@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.LED;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -11,50 +16,77 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class NavigationMethods {
     ColorSensor colorSensor;
     DistanceSensor distanceSensor;
-    int[] colorVals;
+    public int[] colorVals = new int[3];
+    public float[] hsvVals = new float[3];
     int blackMaxThresh = 50;
     int minHueVal = 110;
+    String saturation;
+    String hue;
 
     public String readColor()
     {
         colorVals[0] = colorSensor.red();
         colorVals[1] = colorSensor.green();
         colorVals[2] = colorSensor.blue();
-        float avg = (colorVals[0] + colorVals[1] + colorVals[2])/3;
-        float redDiff = colorVals[2] + colorVals[1];
-        float greenDiff = colorVals[2] + colorVals[0];
-        float blueDiff = colorVals[1] + colorVals[0];
-        if (avg <= blackMaxThresh)
+        Color.RGBToHSV(colorVals[0], colorVals[1], colorVals[2], hsvVals);
+
+            if (hsvVals[0] >= 330 || hsvVals[0] < 60)
+            {
+                if (hsvVals[1] > .5)
+                {
+                    saturation = "pure";
+                }
+                else
+                {
+                    saturation = "light";
+                }
+                hue = "red";
+            }
+            else if (hsvVals[0] >= 60 && hsvVals[0] < 140)
+            {
+                if (hsvVals[1] > .5)
+                {
+                    saturation = "pure";
+                }
+                else
+                {
+                    saturation = "light";
+                }
+                hue = "green";
+            }
+            else if (hsvVals[0] >= 140 && hsvVals[0] < 330)
+                {
+                    if (hsvVals[1] > .5)
+                    {
+                        saturation = "pure";
+                    }
+                    else
+                    {
+                        saturation = "light";
+                    }
+                    hue = "blue";
+                }
+            if (hsvVals[1] < .4)
+            {
+                hue = "grey";
+            }
+
+        if (hsvVals[2] < .3)
         {
-            return "black";
+            hue = "black";
         }
-        else
-        {
-            if (colorVals[0] > redDiff + 15 && colorVals[0] > minHueVal)
-            {
-                return "red";
-            }
-            else if (colorVals[1] > greenDiff + 30 && colorVals[1] > minHueVal)
-            {
-                return "green";
-            }
-            else if (colorVals[2] > blueDiff + 15 && colorVals[2] > minHueVal)
-            {
-                return "blue";
-            }
-            else
-            {
-                return "";
-            }
-        }
+        return saturation + hue;
     }
     public double ReturnDist()
     {
         return distanceSensor.getDistance(DistanceUnit.CM);
+        //return 0;
     }
     public void initNav(MasterClass masterClass)
     {
-        //colorSensor = masterClass.hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        distanceSensor = masterClass.hardwareMap.get(LynxI2cColorRangeSensor.class, "sensor_color_distance");
+        colorSensor = masterClass.hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        distanceSensor = masterClass.hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        masterClass.telemetry.addData("hi",  colorSensor);
+        masterClass.telemetry.update();
     }
 }
