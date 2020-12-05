@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -24,5 +24,6 @@ public class NewAuto extends AutoMethods {
 // Shoot discs at powershot
 // Make sure to move forward
 //
+*/
 
 
