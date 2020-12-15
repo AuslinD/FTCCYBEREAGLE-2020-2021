@@ -7,9 +7,11 @@ public class BluePowerShotAuto extends MasterClass {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Initialize();
+        waitForStart();
 
         while (!isStopRequested() && opModeIsActive()){
-            Initialize();
+
             StateMachine sm = new StateMachine();
             sm.ChangeState("StrafeRight");
             if(sm.state == "StrafeRight") {
