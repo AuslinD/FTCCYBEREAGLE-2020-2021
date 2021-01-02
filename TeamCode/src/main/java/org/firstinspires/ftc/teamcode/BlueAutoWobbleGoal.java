@@ -15,7 +15,6 @@ public class BlueAutoWobbleGoal extends MasterClass{
         char targetZone;
 
         while (!isStopRequested() && opModeIsActive()){
-            StateMachine sm = new StateMachine();
             sm.ChangeState("MoveInch");
             if(sm.state == "MoveInch") {
                 autoMethods.MoveInchEncoder(1, 1380);//put ticks in

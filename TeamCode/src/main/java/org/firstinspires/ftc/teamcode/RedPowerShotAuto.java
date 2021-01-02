@@ -10,14 +10,10 @@ public class RedPowerShotAuto extends MasterClass {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Initialize();
-        waitForStart();
-
 
 
         while (!isStopRequested() && opModeIsActive()){
-
-            StateMachine sm = new StateMachine();
+            Initialize();
             sm.ChangeState("StrafeRight");
             if(sm.state == "StrafeLeft") {
                 autoMethods.StrafeRight(-1, 2132);

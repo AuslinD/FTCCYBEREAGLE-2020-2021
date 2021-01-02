@@ -20,7 +20,7 @@ public class AutoMethods {
     DcMotor C1;
     DcMotor C2;
     public ElapsedTime time = new ElapsedTime();
-    NavigationMethods navigationMethods = new NavigationMethods();
+    MasterClass masterClass = null;
 
 
 
@@ -99,7 +99,7 @@ public class AutoMethods {
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (!careSaturation) {
-            while (navigationMethods.readColor()[1] != desiredColor) {
+            while (masterClass.navigationMethods.readColor()[1] != desiredColor) {
                 fl.setPower(speed);
                 fr.setPower(speed);
                 bl.setPower(speed);
@@ -107,7 +107,7 @@ public class AutoMethods {
             }
         }
         if (careSaturation) {
-            while (navigationMethods.readColor()[0] + navigationMethods.readColor()[1] != desiredColor) {
+            while (masterClass.navigationMethods.readColor()[0] + masterClass.navigationMethods.readColor()[1] != desiredColor) {
                 fl.setPower(speed);
                 fr.setPower(speed);
                 bl.setPower(speed);
@@ -145,11 +145,13 @@ public class AutoMethods {
 
     }
 
-    public void ready(MasterClass masterclass) {
-            fl = masterclass.hardwareMap.dcMotor.get("fl");
-            fr = masterclass.hardwareMap.dcMotor.get("fr");
-            bl = masterclass.hardwareMap.dcMotor.get("bl");
-            br = masterclass.hardwareMap.dcMotor.get("br");
+    public void ready(MasterClass master) {
+        masterClass = master;
+            fl = masterClass.hardwareMap.dcMotor.get("fl");
+            fr = masterClass.hardwareMap.dcMotor.get("fr");
+            bl = masterClass.hardwareMap.dcMotor.get("bl");
+            br = masterClass.hardwareMap.dcMotor.get("br");
+
 
     }
 
