@@ -25,5 +25,3 @@ public class NewAuto extends AutoMethods {
 // Make sure to move forward
 //
 */
-
-
