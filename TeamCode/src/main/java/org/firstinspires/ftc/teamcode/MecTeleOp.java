@@ -109,7 +109,7 @@ public class MecTeleOp extends OpMode {
         if (gamepad2.y && pushReset)
         {
             push.setPosition(1 * pushDir);
-            while (pus)
+            while (push)
             pushDir = 0;
 
         }
