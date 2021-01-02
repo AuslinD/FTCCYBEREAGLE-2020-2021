@@ -8,16 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class RedAutoWobbleGoalV1 extends MasterClass{
     @Override
     public void runOpMode() {
-        Initialize();
         waitForStart();
 
         char targetZone;
 
-
-
         while (!isStopRequested() && opModeIsActive()){
-
-            StateMachine sm = new StateMachine();
+            Initialize();
             sm.ChangeState("MoveInch");
             if(sm.state == "MoveInch") {
                 autoMethods.MoveInchEncoder(1, 1380);//put ticks in
