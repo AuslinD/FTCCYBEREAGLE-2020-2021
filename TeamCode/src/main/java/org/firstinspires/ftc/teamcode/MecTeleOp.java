@@ -87,7 +87,7 @@ public class MecTeleOp extends OpMode {
         {
             curTargetComp += 6000;
             pushReset = false;
-            push.setPosition(.2;
+            push.setPosition(.2);
             comp1.setPower(0);
             comp2.setPower(0);
             finishedState = true;
@@ -183,7 +183,12 @@ public class MecTeleOp extends OpMode {
 
         if (gamepad2.a && clampTime.milliseconds() > 500)
         {
+            //move to the ground
             ClampA();
+            FlipB();
+            FlipB();
+            ClampA();
+            //levitate
         }
 
         if ((gamepad2.b && flipTime.milliseconds() > 500) || active)
