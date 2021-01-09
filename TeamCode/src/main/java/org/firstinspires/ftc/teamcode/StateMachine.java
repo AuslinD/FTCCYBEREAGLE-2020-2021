@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
 
 public class StateMachine extends AutoMethods{
     public List<String> allStates;
     public String state;
+    public ElapsedTime stateTime = new ElapsedTime();
     DcMotor fl;
     DcMotor fr;
     DcMotor bl;
@@ -14,6 +16,7 @@ public class StateMachine extends AutoMethods{
 
     public  void ChangeState(String nextState)
     {
+        stateTime.reset();
         // nextatse is moveforward1
         // allstates index 0 moveforward2
         // alstate idex 1 mo
@@ -40,6 +43,8 @@ public class StateMachine extends AutoMethods{
         ///// There will be more stuff here once we progress..
 
     }
+
+
 
     public void ChangeValues(long sleepTime)
     {
