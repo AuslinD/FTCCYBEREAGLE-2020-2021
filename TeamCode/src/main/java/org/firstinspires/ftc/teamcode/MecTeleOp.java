@@ -21,19 +21,24 @@ public class MecTeleOp extends OpMode {
     DcMotor comp2;
     DcMotor flipper;
     Servo push;
-    int curTargetComp = 0;
+    //DcMotor wFlip;
+    Servo wClamp;
     int dir = 1;
     int targetPos = 500;
     boolean clamped = false;
     boolean active = false;
     boolean hasFlipped = false;
-    boolean pushReset = false;
+    boolean aActive = false;
     boolean xPressed = false;
+    boolean wClamped = false;
+    public boolean pushReset = false;
+    public int curTargetComp = 0;
     String xState ="";
+    boolean firstFrame = true;
     ElapsedTime clampTime = new ElapsedTime();
     ElapsedTime flipTime = new ElapsedTime();
     ElapsedTime pushTime = new ElapsedTime();
-    ElapsedTime xTime = new ElapsedTime();
+    ElapsedTime wobbleTime = new ElapsedTime();
     AutoMethods autoMethods = new AutoMethods();
     StateMachine stateMachine = new StateMachine();
     boolean finishedState = false;
@@ -52,18 +57,23 @@ public class MecTeleOp extends OpMode {
         push = hardwareMap.servo.get("push");
         clamp1 = hardwareMap.servo.get("c1");
         clamp2 = hardwareMap.servo.get("c2");
+        wClamp = hardwareMap.servo.get("w1");
+      //  wFlip = hardwareMap.dcMotor.get("wf1");
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    //    wFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+     //   wFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+       // wFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -71,29 +81,73 @@ public class MecTeleOp extends OpMode {
         comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clamp1.setPosition(.4);
+        clamp1.setPosition(.42);
         clamp2.setPosition(.6);
+        wClamp.setPosition(.1);
     }
 
-    public void ShootY()
+    public void FlipWobble()
     {
-        if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition()))/2 < curTargetComp + 6000) {
-            pushReset = true;
-            push.setPosition(.5);
-            comp1.setPower(1);
-            comp2.setPower(-1);
+        if (wClamped == true) {
+            wClamp.setPosition(.5);
+            wClamped = false; // it is not clamped
+        } else
+        {
+            wClamp.setPosition(1);
+            wClamped = true;
+        }
+    }
+
+    public void ShootY(boolean tele)
+    {
+        if (!tele) {
+            while ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
+                pushReset = true;
+                comp1.setPower(1);
+                comp2.setPower(-1);
+                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
+                    push.setPosition(.45);
+                }
+                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 550) {
+                    push.setPosition(.2);
+                }
+                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 100) {
+                    push.setPosition(.28);
+                }
+            }
+
+            curTargetComp += 2500;
+            pushReset = false;
+            comp1.setPower(0);
+            comp2.setPower(0);
         }
         else
         {
-            curTargetComp += 6000;
-            pushReset = false;
-            push.setPosition(.2);
-            comp1.setPower(0);
-            comp2.setPower(0);
-            finishedState = true;
+            if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
+                pushReset = true;
+                comp1.setPower(1);
+                comp2.setPower(-1);
+                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
+                    push.setPosition(.45);
+                }
+                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 550) {
+                    push.setPosition(.2);
+                }
+                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 100) {
+                    push.setPosition(.28);
+                }
+            }
+            else {
+
+                curTargetComp += 2500;
+                pushReset = false;
+                comp1.setPower(0);
+                comp2.setPower(0);
+            }
         }
-        finishedState = false;
     }
+
+
     public void FlipB()
     {
         if (flipper.getCurrentPosition() < 220 && !hasFlipped) {
@@ -124,30 +178,56 @@ public class MecTeleOp extends OpMode {
         finishedState = false;
     }
 
+    public void moveFlipper(double power, int targetEncoder, int timeout) {
+        if (power < 0) {
+            if (flipper.getCurrentPosition() < targetEncoder - 5) {
+                flipper.setPower(.05);
+            } else if (flipper.getCurrentPosition() > targetEncoder) {
+                flipper.setPower(power);
+            } else {
+                flipper.setPower(0);
+
+            }
+        } else if (power > 0) {
+            if (flipper.getCurrentPosition() > targetEncoder + 5) {
+                flipper.setPower(-.05);
+            } else if (flipper.getCurrentPosition() < targetEncoder) {
+                flipper.setPower(power);
+            } else {
+                flipper.setPower(0);
+
+            }
+        }
+    }
     public void ClampA()
     {
         if (!clamped)
         {
+            // clamping
             clamped = true;
-            clamp1.setPosition(.2);
+            clamp1.setPosition(.25);
             clamp2.setPosition(.65);
         }
         else
         {
+            // unclamping
             clamped = false;
-            clamp1.setPosition(.4);
-            clamp2.setPosition(.45);
+            clamp1.setPosition(.42);
+            clamp2.setPosition(.52);
         }
-        clampTime.reset();
         finishedState = true;
     }
     @Override
     public void loop() {
         if(Math.abs(gamepad1.left_stick_y) > 0.1 || Math.abs(gamepad1.left_stick_x) > 0.1|| Math.abs(gamepad1.right_stick_x) > 0.1){
-                double FLP = gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
-                double FRP = -gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
-                double BLP = gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
-                double BRP = -gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
+
+                double lx = gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x);
+                double ly = gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y);
+                double rx = gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x);
+                double FLP = ly - lx - rx;
+                double FRP = -ly - lx - rx;
+                double BLP = ly + lx - rx;
+                double BRP = -ly + lx - rx;
 
                 double max = Math.max(Math.max(FLP, FRP), Math.max(BLP, BRP));
 
@@ -181,24 +261,63 @@ public class MecTeleOp extends OpMode {
 
         }
 
-        if (gamepad2.a && clampTime.milliseconds() > 500)
+        if ((gamepad2.a && clampTime.milliseconds() > 500) || aActive) {
+            if (!gamepad2.x) {
+                if (firstFrame) {
+                    clampTime.reset();
+                    aActive = true;
+                    firstFrame = false;
+                }
+                if (clampTime.milliseconds() < 500) {
+                    push.setPosition(.28);
+                    moveFlipper(-.2, -20, 0);
+                } else if (clampTime.milliseconds() < 1500) {
+                    if (!clamped)
+                        ClampA();
+                } else if (clampTime.milliseconds() < 2750) {
+                    moveFlipper(.3, 260, 0);
+                } else if (clampTime.milliseconds() < 3250) {
+                    push.setPosition(.2);
+                    if (clamped)
+                        ClampA();
+                } else if (clampTime.milliseconds() < 3750) {
+                    aActive = false;
+                    firstFrame = true;
+                }
+            }
+            else
+            {
+                aActive = false;
+                firstFrame = true;
+            }
+        }
+        else if(gamepad2.b)
         {
-            //move to the ground
-            ClampA();
-            FlipB();
-            FlipB();
-            ClampA();
-            //levitate
+            push.setPosition(.28);
+            moveFlipper(-.1, -50, 0);
+        }
+        else
+        {
+            moveFlipper(.2, 230, 0);
+            if(clamped)
+                ClampA();
         }
 
-        if ((gamepad2.b && flipTime.milliseconds() > 500) || active)
-        {
-            FlipB();
-        }
         if ((gamepad2.y || pushReset))
         {
-            ShootY();
+            ShootY(true);
         }
+        if (gamepad2.left_bumper && wobbleTime.milliseconds() > 500)
+        {
+            wobbleTime.reset();;
+            FlipWobble();
+        }
+        if (gamepad2.right_bumper)
+        {
+            push.setPosition(.2);
+        }
+
+
 
         /*if (gamepad2.x || xPressed)
         {
@@ -240,9 +359,7 @@ public class MecTeleOp extends OpMode {
             }
         }
         */
-        telemetry.addData("comp1", comp1.getCurrentPosition());
-        telemetry.addData("comp2", comp2.getCurrentPosition());
-        telemetry.addData("flipper", flipper.getCurrentPosition());
+        telemetry.addData("pusher", push.getPosition());
         telemetry.update();
 
 

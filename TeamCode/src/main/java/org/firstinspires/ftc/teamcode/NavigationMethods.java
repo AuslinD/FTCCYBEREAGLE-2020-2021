@@ -87,15 +87,51 @@ public class NavigationMethods {
             {
                 hue = "grey";
             }
+            if (hsvVals[1] <.25 && hsvVals[2] > .23)
+            {
+                hue = "white";
+            }
 
         if (hsvVals[2] < .3)
         {
             hue = "black";
         }
+        masterClass.telemetry.addData("hue", hue);
+        masterClass.telemetry.addData("saturation", saturation);
+        masterClass.telemetry.addData("true sat", hsvVals[1]);
+        masterClass.telemetry.addData("true val", hsvVals[2]);
+        masterClass.telemetry.update();
         String colors[] = new String[2];
         colors[0] = saturation;
         colors[1] = hue;
         return colors;
+    }
+
+    public void forwardUntil(String saturation, String hue, double speed)
+    {
+        boolean finished = false;
+        while(!finished) {
+            if (hue != null) {
+                if (saturation == null) {
+                    if (readColor()[1] == hue) {
+                        finished = true;
+                    }
+                }
+                else
+                {
+                    if (readColor()[1] == hue && readColor()[0] == saturation ) {
+                        finished = true;
+                    }
+                }
+            }
+            else if (saturation != null)
+            {
+                if (readColor()[0] == saturation) {
+                    finished = true;
+                }
+            }
+                masterClass.autoMethods.MoveInch(speed);
+        }
     }
     public double ReturnDist()
     {
@@ -190,6 +226,19 @@ public class NavigationMethods {
         }
         return numDisks;
     }
+
+    /*public int AimBotDir() throws InterruptedException
+    {
+        int xMax = getWidth();
+        int yMax = getHeight();
+        int y = 0;
+        for (int x = 0; x < xMax; x++)
+        {
+            if (red(getPix(x,y)) > 220 || (red(getPix(x,y)) > green(getPix(x,y)) + blue(getPix(x,y)) && red(getPix(x,y)) > 160))
+        }
+    }
+    */
+
     public void initNav(MasterClass master)
     {
         masterClass = master;
