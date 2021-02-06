@@ -19,6 +19,13 @@ public class RedShot extends MasterClass {
         sm.ChangeState("strafe_right");
 
         while (opModeIsActive() && !isStopRequested()) {
+                if (sm.state == "strafe_right") {
+                    while (true) {
+                        telemetry.addData("IMU", autoMethods.getGyroYaw());
+                        telemetry.update();
+                    }
+                }
+
 
             telemetry.addData("state ", sm.state);
             telemetry.update();

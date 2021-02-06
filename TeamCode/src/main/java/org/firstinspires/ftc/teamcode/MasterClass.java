@@ -7,6 +7,7 @@ public abstract class MasterClass extends LinearOpMode {
     AutoMethods autoMethods = null;
     NavigationMethods navigationMethods = null;
     StateMachine sm = null;
+    Vision vision = null;
     //MecTeleOp mecTeleOp = null;
 
 
@@ -14,11 +15,14 @@ public abstract class MasterClass extends LinearOpMode {
     {
         autoMethods = new AutoMethods();
         navigationMethods = new NavigationMethods();
+        vision = new Vision();
         sm = new StateMachine();
         //mecTeleOp = new MecTeleOp();
 
-        navigationMethods.initNav(this);
-        autoMethods.ready(this);
+        vision.initVision(this);
+       // navigationMethods.initNav(this);
+       // autoMethods.ready(this);
+
     }
 
 }

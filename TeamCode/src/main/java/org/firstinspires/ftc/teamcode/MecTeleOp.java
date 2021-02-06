@@ -271,16 +271,16 @@ public class MecTeleOp extends OpMode {
                 if (clampTime.milliseconds() < 500) {
                     push.setPosition(.28);
                     moveFlipper(-.2, -20, 0);
-                } else if (clampTime.milliseconds() < 1500) {
+                } else if (clampTime.milliseconds() < 1250) {
                     if (!clamped)
                         ClampA();
-                } else if (clampTime.milliseconds() < 2750) {
+                } else if (clampTime.milliseconds() < 2250) {
                     moveFlipper(.3, 260, 0);
-                } else if (clampTime.milliseconds() < 3250) {
+                } else if (clampTime.milliseconds() < 2750) {
                     push.setPosition(.2);
                     if (clamped)
                         ClampA();
-                } else if (clampTime.milliseconds() < 3750) {
+                } else if (clampTime.milliseconds() < 3000) {
                     aActive = false;
                     firstFrame = true;
                 }
