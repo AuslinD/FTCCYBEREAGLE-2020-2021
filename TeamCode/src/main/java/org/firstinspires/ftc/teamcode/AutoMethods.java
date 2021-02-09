@@ -30,7 +30,7 @@ public class AutoMethods {
     DcMotor flipper;
     Servo push;
     public boolean pushReset = false;
-    public int curTargetComp = 0;
+    public int curTargetComp = 2500;
     int test = 0;
     public ElapsedTime time = new ElapsedTime();
     MasterClass masterClass = null;
@@ -115,6 +115,7 @@ public class AutoMethods {
                     push.setPosition(.1);
                 }
             }
+
 
             curTargetComp += 2500;
             pushReset = false;

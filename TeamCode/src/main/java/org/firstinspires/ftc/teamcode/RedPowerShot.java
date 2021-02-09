@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name="redShot", group="Auto")
-public class RedShot extends MasterClass {
+@Autonomous(name="redPowerShot", group="Auto")
+public class RedPowerShot extends MasterClass {
     public void Init()
     {
 
@@ -16,17 +16,16 @@ public class RedShot extends MasterClass {
         waitForStart();
         Initialize();
 
-        sm.ChangeState("strafe_right");
+        sm.ChangeState("strafe_left");
 
         while (opModeIsActive() && !isStopRequested()) {
-
 
             telemetry.addData("state ", sm.state);
             telemetry.update();
 
 
-            if (sm.state == "strafe_right") {
-                autoMethods.StrafeRight(-.5, 2000);
+            if (sm.state == "strafe_left") {
+                autoMethods.StrafeRight(.7, 2000);
                 sm.ChangeState("forward_until_white");
             }
             else if (sm.state == "forward_until_white"/* && sm.stateTime.milliseconds() > 300*/) {
@@ -35,19 +34,23 @@ public class RedShot extends MasterClass {
             }
             else if (sm.state == "back_from_white" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.MoveInchEncoder(-.3, 350);
-                sm.ChangeState("strafe_left_to_shoot");
+                sm.ChangeState("strafe_right_to_shoot");
             }
-            else if (sm.state == "strafe_left_to_shoot" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.StrafeRight(.3, 1300);
-                sm.ChangeState("correctSelf");
+            else if (sm.state == "strafe_right_to_shoot" && sm.stateTime.milliseconds() > 300) {
+                autoMethods.StrafeRight(-.3, 1300);
+                sm.ChangeState("correct_self_middle");
             }
-            else if(sm.state == "correctSelf" && sm.stateTime.milliseconds() > 300 )
+            else if(sm.state == "correct_self_middle" && sm.stateTime.milliseconds() > 300 )
             {
                 autoMethods.turnPD(0,.2);
                 sm.ChangeState("shoot1");
             }
             else if (sm.state == "shoot1" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
+                sm.ChangeState("correct_self_right");
+            }
+            else if (sm.state == "correct_self_right" && sm.stateTime.milliseconds() > 300) {
+                autoMethods.turnPD(8,.15);
                 sm.ChangeState("shoot2");
             }
             else if (sm.state == "shoot2" && sm.stateTime.milliseconds() > 300) {
@@ -56,6 +59,10 @@ public class RedShot extends MasterClass {
             }
             else if (sm.state == "shoot3" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
+                sm.ChangeState("correct_self_left");
+            }
+            else if (sm.state == "correct_self_left" && sm.stateTime.milliseconds() > 300) {
+                autoMethods.turnPD(-8,.1);
                 sm.ChangeState("shoot4");
             }
             else if (sm.state == "shoot4" && sm.stateTime.milliseconds() > 300) {
@@ -63,10 +70,6 @@ public class RedShot extends MasterClass {
                 sm.ChangeState("shoot5");
             }
             else if (sm.state == "shoot5" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
-                sm.ChangeState("shoot6");
-            }
-            else if (sm.state == "shoot6" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
                 sm.ChangeState("forward");
             }

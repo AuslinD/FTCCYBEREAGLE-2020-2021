@@ -7,9 +7,15 @@ import com.vuforia.PIXEL_FORMAT;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static android.graphics.Color.green;
 import static android.graphics.Color.red;
+import static android.graphics.Color.blue;
 
 public class Vision {
 
@@ -20,33 +26,34 @@ public class Vision {
 
     public android.graphics.Bitmap getBitmap() throws InterruptedException {
 
-
+        vuforia.setFrameQueueCapacity(10);
         VuforiaLocalizer.CloseableFrame picture;
         picture = vuforia.getFrameQueue().take();
-        Image rgb = picture.getImage(1);
+
+        Image rgb;
 
         long numImages = picture.getNumImages();
 
-        masterClass.telemetry.addData("Num images", numImages);
-
-        for (int i = 0; i < numImages; i++) {
-
-            int format = picture.getImage(i).getFormat();
-            if (format == PIXEL_FORMAT.RGB565) {
-                rgb = picture.getImage(i);
-                break;
-            } else {
-                masterClass.telemetry.addLine("Didn't find correct RGB format");
 
 
-            }
-        }
+            int format = picture.getImage(0).getFormat();
+            masterClass.telemetry.update();
+           // if (format == 4) {
+                rgb = picture.getImage(0);
+            masterClass.sleep(10);
+            // else {
+               // masterClass.telemetry.addLine("Didn't find correct RGB format");
+
+
+          //  }
+
+
+        masterClass.telemetry.update();
 
         android.graphics.Bitmap imageBitmap = android.graphics.Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), android.graphics.Bitmap.Config.RGB_565);
         imageBitmap.copyPixelsFromBuffer(rgb.getPixels());
 
-        masterClass.telemetry.addData("Image width", imageBitmap.getWidth());
-        masterClass.telemetry.addData("Image height", imageBitmap.getHeight());
+
 
 
         masterClass.sleep(500);
@@ -71,9 +78,9 @@ public class Vision {
         return bitmap.getPixel(x,y);
     }
 
-    public android.graphics.Bitmap TestWeb() throws InterruptedException
+    public int TestWeb() throws InterruptedException
     {
-        return getBitmap();
+        return red(getPix(0,0));
     }
 
     public int ReturnDisks() throws InterruptedException {
@@ -127,15 +134,17 @@ public class Vision {
     public void initVision(MasterClass mClass)
     {
         masterClass = mClass;
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         String VUFORIA_KEY =
                 "AQswYz7/////AAABmcNWVtOSYEEXpQufuBKrdNMSKO5UAESlpwf1GyWOEzZMytfVdfY2BsxJop+3JkhqYQEby7j5SJHbcw6kSDuMe40rGeec5vJtb9m+qxy8jqy8EuBZ8n9IAldRtolwfIBkMI+d9+EkoqSBiZwhSWDzT0EVw83o3H+WzzMmj91dURhqRNzdHjEz0lUUgwDNrfNuW3oGPn1A1alADdHYnnAo++SiO9m4hHPVkdomVSxNjxu3I6whv16zWlQTLdK97POf2t37U+rS/2hZ5GSNG054PtWDppXH+ec8XNrDfys6+OmeG/m6MFvNjoUAyUgV7bsqMM+QUM3eTI3/FENR6PZ3VND47T3Dm74Hxkor++lEZHEi";
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         webcam = masterClass.hardwareMap.get(WebcamName.class, "Webcam 1");
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         int cameraMonitorViewId = masterClass.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", masterClass.hardwareMap.appContext.getPackageName());
         parameters.cameraName = webcam;
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        vuforia.enableConvertFrameToBitmap();
         masterClass.idle();
     }
 
