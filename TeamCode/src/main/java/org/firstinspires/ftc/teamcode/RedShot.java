@@ -64,10 +64,6 @@ public class RedShot extends MasterClass {
             }
             else if (sm.state == "shoot5" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
-                sm.ChangeState("shoot6");
-            }
-            else if (sm.state == "shoot6" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
                 sm.ChangeState("forward");
             }
             else if (sm.state == "forward" && sm.stateTime.milliseconds() > 300) {

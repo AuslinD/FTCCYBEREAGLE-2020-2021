@@ -50,7 +50,7 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("correct_self_right");
             }
             else if (sm.state == "correct_self_right" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.turnPD(8,.15);
+                autoMethods.turnPD(8,.2);
                 sm.ChangeState("shoot2");
             }
             else if (sm.state == "shoot2" && sm.stateTime.milliseconds() > 300) {

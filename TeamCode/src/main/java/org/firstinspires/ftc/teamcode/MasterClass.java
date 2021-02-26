@@ -20,8 +20,8 @@ public abstract class MasterClass extends LinearOpMode {
         //mecTeleOp = new MecTeleOp();
 
         vision.initVision(this);
-        navigationMethods.initNav(this);
-        autoMethods.ready(this);
+       // navigationMethods.initNav(this);
+       // autoMethods.ready(this);
 
     }
 

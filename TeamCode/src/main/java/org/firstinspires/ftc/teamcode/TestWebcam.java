@@ -42,9 +42,8 @@ public class TestWebcam extends MasterClass {
 
 
         while (opModeIsActive() && !isStopRequested()) {
-            sm.ChangeState("findGyro");
-            if(sm.state == "findGyro") {
-                telemetry.addData("findGyro", getGyroYaw());
+            if(sm.state == "webcam_Test") {
+                vision.CalcMiddle();
             }
 
             telemetry.update();
