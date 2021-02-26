@@ -202,7 +202,9 @@ public class Vision {
             }
             for (int y = height / 2; y < height; y++)
             {
-                totalAvg = totalAvgs / totalNumAvgs;
+                if (totalNumAvgs > 0) {
+                    totalAvg = totalAvgs / totalNumAvgs;
+                }
             }
 
         if (CalcLeftRight(totalAvg, 2) == 1)
