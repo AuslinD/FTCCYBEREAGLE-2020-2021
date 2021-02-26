@@ -41,6 +41,7 @@ public class Vision {
     int thisAvg = 0;
     int totalAvg = 0;
     float interval = 501;
+    android.graphics.Bitmap bitmap;
 
 
     public android.graphics.Bitmap getBitmap() throws InterruptedException {
@@ -82,14 +83,6 @@ public class Vision {
         return imageBitmap;
     }
 
-    public int getHeight() throws InterruptedException{
-        android.graphics.Bitmap bitmap = getBitmap();
-        return bitmap.getHeight();
-    }
-    public int getWidth() throws InterruptedException{
-        android.graphics.Bitmap bitmap = getBitmap();
-        return bitmap.getWidth();
-    }
 
     public int getPix(int x, int y) throws InterruptedException
     {
@@ -104,7 +97,7 @@ public class Vision {
 
     public int CalcLeftRight(int x, int grace) throws InterruptedException
     {
-        if (getWidth()/2 > x + grace)
+        if (bitmap.getWidth()/2 > x + grace)
         {
             return -1;
         }
@@ -118,21 +111,22 @@ public class Vision {
 
     public void CalcMiddle() throws InterruptedException
     {
-        android.graphics.Bitmap bitmap = getBitmap();
-
+        bitmap = getBitmap();
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
         float rThreshold = 97;
         float bThreshold = 61;
         float gThreshold = 61;
         int test = 1;
 
-            for (int y = getHeight() / 2; y < getHeight(); y++)
+            for (int y = height / 2; y < height; y++)
             {
                 interval = 0;
-                for (int x = 0; x < getWidth(); x++)
+                for (int x = 0; x < width; x++)
                 {
 
-                    masterClass.telemetry.addData("test", test);
-                    masterClass.telemetry.update();
+                    //masterClass.telemetry.addData("test", test);
+                    //masterClass.telemetry.update();
                     test += 1;
 
                     // is red
@@ -169,7 +163,7 @@ public class Vision {
 
                     // ending
 
-                    if (reachMax && (xStreak < 15 || x == getWidth()-1))
+                    if (reachMax && (xStreak < 15 || x == width-1))
                     {
                         if (exceptionStreak > 300)
                         {
@@ -206,7 +200,7 @@ public class Vision {
                 exceptionStreak = 0;
                 timesThrough = 0;
             }
-            for (int y = getHeight() / 2; y < getHeight(); y++)
+            for (int y = height / 2; y < height; y++)
             {
                 totalAvg = totalAvgs / totalNumAvgs;
             }
@@ -224,8 +218,8 @@ public class Vision {
     }
 
     public int ReturnDisks() throws InterruptedException {
-        int xMax = getHeight();
-        int yMax = getWidth();
+        int xMax = bitmap.getWidth();
+        int yMax = bitmap.getHeight();
         int orangeX = 0;
         int otherX = 0;
         int orangeY = 0;
@@ -273,6 +267,7 @@ public class Vision {
 
     public void initVision(MasterClass mClass)
     {
+
         masterClass = mClass;
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
