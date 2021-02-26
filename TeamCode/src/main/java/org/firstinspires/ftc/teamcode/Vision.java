@@ -118,6 +118,8 @@ public class Vision {
 
     public void CalcMiddle() throws InterruptedException
     {
+        android.graphics.Bitmap bitmap = getBitmap();
+
         float rThreshold = 97;
         float bThreshold = 61;
         float gThreshold = 61;
@@ -131,11 +133,11 @@ public class Vision {
 
                     masterClass.telemetry.addData("test", test);
                     masterClass.telemetry.update();
-                    test += 1;11111121
+                    test += 1;
 
                     // is red
 
-                    if (red(getPix(x,y)) > rThreshold && green((getPix(x,y))) < gThreshold && blue(getPix(x,y)) < bThreshold)
+                    if (red(bitmap.getPixel(x,y)) > rThreshold && green((bitmap.getPixel(x,y))) < gThreshold && blue(bitmap.getPixel(x,y)) < bThreshold)
                     {
                         if (xStreak == 0)
                         {
