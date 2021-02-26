@@ -121,12 +121,17 @@ public class Vision {
         float rThreshold = 97;
         float bThreshold = 61;
         float gThreshold = 61;
+        int test = 1;
 
             for (int y = getHeight() / 2; y < getHeight(); y++)
             {
                 interval = 0;
                 for (int x = 0; x < getWidth(); x++)
                 {
+
+                    masterClass.telemetry.addData("test", test);
+                    masterClass.telemetry.update();
+                    test += 1;11111121
 
                     // is red
 
