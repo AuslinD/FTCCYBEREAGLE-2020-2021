@@ -68,7 +68,6 @@ public class Vision {
           //  }
 
 
-        masterClass.telemetry.update();
 
         android.graphics.Bitmap imageBitmap = android.graphics.Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), android.graphics.Bitmap.Config.RGB_565);
         imageBitmap.copyPixelsFromBuffer(rgb.getPixels());
@@ -76,7 +75,7 @@ public class Vision {
 
 
 
-        masterClass.sleep(500);
+        //masterClass.sleep(500);
 
         picture.close();
 
@@ -118,96 +117,105 @@ public class Vision {
         float bThreshold = 61;
         float gThreshold = 61;
         int test = 1;
+        totalAvg = 0;
+        totalNumAvgs = 0;
+        totalAvgs = 0;
+        avgs = 0;
+        numAvgs = 0;
+        timesThrough = 0;
+        xStreak = 0;
 
-            for (int y = height / 2; y < height; y++)
+        for (int yc = height/2 ; yc < height; yc+=2)
+        {
+            int y = height - yc;
+            interval = 0;
+
+            for (int x = 0; x < width; x+=2)
             {
-                interval = 0;
-                for (int x = 0; x < width; x++)
+
+                //masterClass.telemetry.addData("test", test);
+                //masterClass.telemetry.update();
+                test += 1;
+
+                // is red
+                int pixel = bitmap.getPixel(x,y);
+
+                if (red(pixel) > rThreshold && green(pixel) < gThreshold && blue(pixel) < bThreshold)
                 {
-
-                    //masterClass.telemetry.addData("test", test);
-                    //masterClass.telemetry.update();
-                    test += 1;
-
-                    // is red
-
-                    if (red(bitmap.getPixel(x,y)) > rThreshold && green((bitmap.getPixel(x,y))) < gThreshold && blue(bitmap.getPixel(x,y)) < bThreshold)
+                    if (xStreak == 0)
                     {
-                        if (xStreak == 0)
-                        {
-                            firstRed = x;
-                            reachMax = false;
-                        }
-                        xStreak += 1;
-                        exceptionStreak += 1;
-
-                        if (xStreak > 35)
-                        {
-                            xStreak = 35;
-                            reachMax = true;
-                            lastRed = x;
-                        }
+                        firstRed = x;
+                        reachMax = false;
                     }
+                    xStreak += 1;
+                    exceptionStreak += 1;
 
-                    // is not red
-
-                    else
+                    if (xStreak > 35)
                     {
-                        xStreak -= 1;
-                        if (xStreak < 0)
-                        {
-                            xStreak = 0;
-                            reachMax = false;
-                        }
+                        xStreak = 35;
+                        reachMax = true;
+                        lastRed = x;
                     }
+                }
 
-                    // ending
+                // is not red
 
-                    if (reachMax && (xStreak < 15 || x == width-1))
+                else
+                {
+                    xStreak -= 1;
+                    if (xStreak < 0)
                     {
-                        if (exceptionStreak > 300)
-                        {
-                            timesThrough = 2;
-                        }
-                        timesThrough += 1;
-                        avgs += firstRed;
-                        avgs += lastRed;
-                        numAvgs += 2;
                         xStreak = 0;
                         reachMax = false;
                     }
                 }
 
-                if (timesThrough <= 1)
+                // ending
+
+                if (reachMax && (xStreak < 15 || x == width-1))
                 {
-                    ignoreRow = true;
-                    avgs = 0;
-                    numAvgs = 0;
-                }
-                else
-                {
-                    ignoreRow = false;
-                }
-                xStreak = 0;
-                if (numAvgs > 0 && !ignoreRow)
-                {
-                    totalAvgs += avgs / numAvgs;
-                    totalNumAvgs += 1;
-                    numAvgs = 0;
-                    avgs = 0;
-                }
-                avgs = 0;
-                exceptionStreak = 0;
-                timesThrough = 0;
-            }
-            for (int y = height / 2; y < height; y++)
-            {
-                if (totalNumAvgs > 0) {
-                    totalAvg = totalAvgs / totalNumAvgs;
+                    if (exceptionStreak > 300)
+                    {
+                        timesThrough = 2;
+                    }
+                    timesThrough += 1;
+                    avgs += firstRed;
+                    avgs += lastRed;
+                    numAvgs += 2;
+                    xStreak = 0;
+                    reachMax = false;
                 }
             }
 
-            masterClass.telemetry.addData("total", totalAvg);
+            if (timesThrough <= 1)
+            {
+                ignoreRow = true;
+                avgs = 0;
+                numAvgs = 0;
+            }
+            else
+            {
+                ignoreRow = false;
+            }
+            xStreak = 0;
+            if (numAvgs > 0 && !ignoreRow)
+            {
+                totalAvgs += avgs / numAvgs;
+                totalNumAvgs += 1;
+                numAvgs = 0;
+                avgs = 0;
+            }
+            avgs = 0;
+            exceptionStreak = 0;
+            timesThrough = 0;
+        }
+
+        if (totalNumAvgs > 0)
+           totalAvg = totalAvgs / totalNumAvgs;
+
+        masterClass.telemetry.addData("total", totalAvg);
+        masterClass.telemetry.addData("w:", width);
+        masterClass.telemetry.addData("h", height);
         if (CalcLeftRight(totalAvg, 2) == 1)
         {
           //  masterClass.telemetry.addLine("right");
@@ -216,7 +224,6 @@ public class Vision {
         {
            // masterClass.telemetry.addLine("left");
         }
-
 
     }
 
