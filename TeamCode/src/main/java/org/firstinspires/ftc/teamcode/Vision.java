@@ -124,13 +124,21 @@ public class Vision {
         numAvgs = 0;
         timesThrough = 0;
         xStreak = 0;
+        int xStep = 2;
+        int yStep = 2;
+        float fWidth = (float)width;
+        float fStep = (float)xStep;
+        int eStreak = (int)(.146484375 * fWidth / fStep);
+        int lStreak = (int)(.00732421875 * fWidth / fStep);
+        int rStreak = (int)(.01708984375 * fWidth / fStep);
 
-        for (int yc = height/2 ; yc < height; yc+=2)
+
+        for (int yc = height/2 ; yc < height; yc+=yStep)
         {
             int y = height - yc;
             interval = 0;
 
-            for (int x = 0; x < width; x+=2)
+            for (int x = 0; x < width; x+=xStep)
             {
 
                 //masterClass.telemetry.addData("test", test);
@@ -150,7 +158,7 @@ public class Vision {
                     xStreak += 1;
                     exceptionStreak += 1;
 
-                    if (xStreak > 35)
+                    if (xStreak > rStreak)
                     {
                         xStreak = 35;
                         reachMax = true;
@@ -172,9 +180,9 @@ public class Vision {
 
                 // ending
 
-                if (reachMax && (xStreak < 15 || x == width-1))
+                if (reachMax && (xStreak < lStreak || x == width-1))
                 {
-                    if (exceptionStreak > 300)
+                    if (exceptionStreak > eStreak)
                     {
                         timesThrough = 2;
                     }
