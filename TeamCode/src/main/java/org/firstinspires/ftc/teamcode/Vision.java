@@ -207,13 +207,14 @@ public class Vision {
                 }
             }
 
+            masterClass.telemetry.addData("total", totalAvg);
         if (CalcLeftRight(totalAvg, 2) == 1)
         {
-            masterClass.telemetry.addLine("right");
+          //  masterClass.telemetry.addLine("right");
         }
         else
         {
-            masterClass.telemetry.addLine("left");
+           // masterClass.telemetry.addLine("left");
         }
 
 
