@@ -12,7 +12,7 @@ public class RedPowerShot extends MasterClass {
 
     }
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException{
         waitForStart();
         Initialize();
 
@@ -40,8 +40,11 @@ public class RedPowerShot extends MasterClass {
                 autoMethods.StrafeRight(-.3, 1300);
                 sm.ChangeState("correct_self_middle");
             }
+
             else if(sm.state == "correct_self_middle" && sm.stateTime.milliseconds() > 300 )
             {
+                autoMethods.turnPD(0,.2);
+                vision.StrafeRightVision();
                 autoMethods.turnPD(0,.2);
                 sm.ChangeState("shoot1");
             }
@@ -62,7 +65,7 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("correct_self_left");
             }
             else if (sm.state == "correct_self_left" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.turnPD(-8,.1);
+                autoMethods.turnPD(16,.1);
                 sm.ChangeState("shoot4");
             }
             else if (sm.state == "shoot4" && sm.stateTime.milliseconds() > 300) {

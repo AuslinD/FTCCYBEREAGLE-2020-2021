@@ -245,15 +245,30 @@ public class AutoMethods {
             br.setPower(speed);
             fr.setPower(-speed);
             //masterClass.telemetry.addData("bl", bl.getCurrentPosition());
-
-
         }
-
         bl.setPower(0);
         fl.setPower(0);
         br.setPower(0);
         fr.setPower(0);
+    }
 
+    public void Strafe(double speed){// positive speed is right
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // positive is right
+
+        if(speed > 1){
+            speed = 1;
+        }
+        bl.setPower(speed);
+        fl.setPower(-speed);
+        br.setPower(speed);
+        fr.setPower(-speed);
 
     }
 

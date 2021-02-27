@@ -18,7 +18,7 @@ import static android.graphics.Color.green;
 import static android.graphics.Color.red;
 import static android.graphics.Color.blue;
 
-public class Vision {
+public class Vision{
 
     CameraDevice camera;
     public VuforiaLocalizer vuforia;
@@ -94,28 +94,44 @@ public class Vision {
         return red(getPix(0,0));
     }
 
+    public void StrafeRightVision() throws InterruptedException{
+        if(CalcMiddle() == "left"){
+            while(CalcMiddle() != "perfect"){
+                masterClass.autoMethods.Strafe(0.2);
+            }
+        }
+        else if(CalcMiddle() == "right"){
+            while(CalcMiddle() != "perfect"){
+                masterClass.autoMethods.Strafe(-0.2);
+            }
+        }
+    }
+
     public int CalcLeftRight(int x, int grace) throws InterruptedException
     {
-        if (bitmap.getWidth()/2 > x + grace)
+        if (bitmap.getWidth()/1.3993 - grace > x)
         {
             return -1;
         }
-        else
+        else if (bitmap.getWidth()/1.3993 + grace < x)
         {
             return 1;
+        }
+        else {
+            return 0;
         }
 
 
     }
 
-    public void CalcMiddle() throws InterruptedException
+    public String CalcMiddle() throws InterruptedException
     {
         bitmap = getBitmap();
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         float rThreshold = 97;
-        float bThreshold = 61;
-        float gThreshold = 61;
+        float bThreshold = 97;
+        float gThreshold = 97;
         int test = 1;
         totalAvg = 0;
         totalNumAvgs = 0;
@@ -221,16 +237,17 @@ public class Vision {
         if (totalNumAvgs > 0)
            totalAvg = totalAvgs / totalNumAvgs;
 
-        masterClass.telemetry.addData("total", totalAvg);
-        masterClass.telemetry.addData("w:", width);
-        masterClass.telemetry.addData("h", height);
-        if (CalcLeftRight(totalAvg, 2) == 1)
+        if (CalcLeftRight(totalAvg, 22) == 1)
         {
-          //  masterClass.telemetry.addLine("right");
+            return "right";
+        }
+        else if(CalcLeftRight(totalAvg, 22) == -1)
+        {
+            return "left";
         }
         else
         {
-           // masterClass.telemetry.addLine("left");
+            return "perfect";
         }
 
     }
