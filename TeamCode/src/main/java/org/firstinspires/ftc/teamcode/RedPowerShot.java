@@ -37,7 +37,7 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("strafe_right_to_shoot");
             }
             else if (sm.state == "strafe_right_to_shoot" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.StrafeRight(-.3, 1300);
+                autoMethods.StrafeRight(-.3, 300);
                 sm.ChangeState("correct_self_middle");
             }
 
@@ -53,7 +53,7 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("correct_self_right");
             }
             else if (sm.state == "correct_self_right" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.turnPD(8,.2);
+                autoMethods.turnPD(-8,.2);
                 sm.ChangeState("shoot2");
             }
             else if (sm.state == "shoot2" && sm.stateTime.milliseconds() > 300) {
@@ -65,7 +65,7 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("correct_self_left");
             }
             else if (sm.state == "correct_self_left" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.turnPD(16,.1);
+                autoMethods.turnPD(-16,.1);
                 sm.ChangeState("shoot4");
             }
             else if (sm.state == "shoot4" && sm.stateTime.milliseconds() > 300) {

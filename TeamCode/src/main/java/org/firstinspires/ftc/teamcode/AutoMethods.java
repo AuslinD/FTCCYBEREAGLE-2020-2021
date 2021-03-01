@@ -192,17 +192,17 @@ public class AutoMethods {
 
     public void turnPD(int tarDegree, double speed)
     {
-        double startDiff = Math.abs(tarDegree) - Math.abs(getGyroYaw());
+        double startDiff = tarDegree - getGyroYaw();
         double p = 0;
         curDiff = startDiff;
         double plusMin = 0;
         while(Math.abs(curDiff) > 1)
         {
-            curDiff = Math.abs(tarDegree) - Math.abs(getGyroYaw());
+            curDiff = tarDegree - getGyroYaw();
             double trueDiff = tarDegree - getGyroYaw();
             p = curDiff/startDiff;
-            p = p * Math.signum(trueDiff);
-            plusMin = .05 * Math.signum(trueDiff);
+            p = p * Math.signum(-trueDiff);
+            plusMin = .05 * Math.signum(-trueDiff);
             bl.setPower(speed * p + plusMin);
             fl.setPower(speed * p + plusMin);
             br.setPower(speed * p + plusMin);

@@ -97,23 +97,23 @@ public class Vision{
     public void StrafeRightVision() throws InterruptedException{
         if(CalcMiddle() == "left"){
             while(CalcMiddle() != "perfect"){
-                masterClass.autoMethods.Strafe(0.2);
+                masterClass.autoMethods.Strafe(0.25);
             }
         }
         else if(CalcMiddle() == "right"){
             while(CalcMiddle() != "perfect"){
-                masterClass.autoMethods.Strafe(-0.2);
+                masterClass.autoMethods.Strafe(-0.25);
             }
         }
     }
 
     public int CalcLeftRight(int x, int grace) throws InterruptedException
     {
-        if (bitmap.getWidth()/1.3993 - grace > x)
+        if (bitmap.getWidth()/1.3793 - grace > x)
         {
             return -1;
         }
-        else if (bitmap.getWidth()/1.3993 + grace < x)
+        else if (bitmap.getWidth()/1.3793 + grace < x)
         {
             return 1;
         }
