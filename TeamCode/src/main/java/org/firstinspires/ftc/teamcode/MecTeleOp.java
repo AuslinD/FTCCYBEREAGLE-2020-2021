@@ -25,7 +25,7 @@ public class MecTeleOp extends OpMode {
     Servo push;
     //DcMotor wFlip;
     Servo wClamp;
-    Servo wobble;
+    Servo w1;
     int dir = 1;
     int targetPos = 500;
     boolean clamped = false;
@@ -60,7 +60,7 @@ public class MecTeleOp extends OpMode {
         comp2 = hardwareMap.dcMotor.get("comp2");
         flipper = hardwareMap.dcMotor.get("flipper");
         push = hardwareMap.servo.get("push");
-        wobble = hardwareMap.servo.get("wobble");
+        w1 = hardwareMap.servo.get("w1");
         clamp1 = hardwareMap.servo.get("c1");
         clamp2 = hardwareMap.servo.get("c2");
         wClamp = hardwareMap.servo.get("w1");
@@ -347,11 +347,11 @@ public class MecTeleOp extends OpMode {
 
 
         if (gamepad2.right_bumper && wobbleTimer.milliseconds() > 500 || gamepad2.left_bumper) {
-            if(wobble.getPosition() == 30){
-               wobble.setPosition(130);
+            if(w1.getPosition() == 30){
+               w1.setPosition(130);
            }
-            else if(wobble.getPosition() == 130){
-               wobble.setPosition(30);
+            else if(w1.getPosition() == 130){
+               w1.setPosition(30);
            }
 
         }
@@ -364,7 +364,7 @@ public class MecTeleOp extends OpMode {
 
 
 
-        /*if (gamepad2.x || xPressed)
+         /*if(gamepad2.x || xPressed)
         {
             xPressed = true;
             if (stateMachine.state == "") {
