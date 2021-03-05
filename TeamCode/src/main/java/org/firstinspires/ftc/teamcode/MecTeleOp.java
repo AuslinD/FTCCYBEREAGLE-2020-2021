@@ -81,8 +81,8 @@ public class MecTeleOp extends OpMode {
         comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clamp1.setPosition(.42);
-        clamp2.setPosition(.6);
+        clamp1.setPosition(.7);
+        clamp2.setPosition(.8);
         wClamp.setPosition(.1);
     }
 
@@ -205,15 +205,15 @@ public class MecTeleOp extends OpMode {
         {
             // clamping
             clamped = true;
-            clamp1.setPosition(.25);
-            clamp2.setPosition(.65);
+            clamp1.setPosition(.6);
+            clamp2.setPosition(1);
         }
         else
         {
             // unclamping
             clamped = false;
-            clamp1.setPosition(.42);
-            clamp2.setPosition(.52);
+            clamp1.setPosition(.75);
+            clamp2.setPosition(.75);
         }
         finishedState = true;
     }

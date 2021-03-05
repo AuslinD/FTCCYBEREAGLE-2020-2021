@@ -200,13 +200,18 @@ public class AutoMethods {
         {
             curDiff = tarDegree - getGyroYaw();
             double trueDiff = tarDegree - getGyroYaw();
-            p = curDiff/startDiff;
-            p = p * Math.signum(-trueDiff);
-            plusMin = .05 * Math.signum(-trueDiff);
+            int calc = Math.abs((int)(tarDegree - curDiff));
+            p = Math.abs(curDiff)/Math.abs(startDiff);
+            p = p * Math.signum(trueDiff);
+            plusMin = .1 * Math.signum(trueDiff);
             bl.setPower(speed * p + plusMin);
             fl.setPower(speed * p + plusMin);
             br.setPower(speed * p + plusMin);
             fr.setPower(speed * p + plusMin);
+            masterClass.telemetry.addData("getGyrowyaw", getGyroYaw());
+            masterClass.telemetry.addData("curdiff", curDiff);
+            masterClass.telemetry.addData("startd", startDiff);
+            masterClass.telemetry.update();
         }
         bl.setPower(0);
         fl.setPower(0);

@@ -37,15 +37,15 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("strafe_right_to_shoot");
             }
             else if (sm.state == "strafe_right_to_shoot" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.StrafeRight(-.3, 300);
+                autoMethods.StrafeRight(-.3, 900);
                 sm.ChangeState("correct_self_middle");
             }
 
             else if(sm.state == "correct_self_middle" && sm.stateTime.milliseconds() > 300 )
             {
                 autoMethods.turnPD(0,.2);
-                vision.StrafeRightVision();
-                autoMethods.turnPD(0,.2);
+                vision.StrafeRightVision("left");
+             //   autoMethods.turnPD(0,.2);
                 sm.ChangeState("shoot1");
             }
             else if (sm.state == "shoot1" && sm.stateTime.milliseconds() > 300) {
@@ -53,26 +53,18 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("correct_self_right");
             }
             else if (sm.state == "correct_self_right" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.turnPD(-8,.2);
+                vision.StrafeRightVision("middle");
                 sm.ChangeState("shoot2");
             }
             else if (sm.state == "shoot2" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
-                sm.ChangeState("shoot3");
-            }
-            else if (sm.state == "shoot3" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
                 sm.ChangeState("correct_self_left");
             }
             else if (sm.state == "correct_self_left" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.turnPD(-16,.1);
+                vision.StrafeRightVision("right");
                 sm.ChangeState("shoot4");
             }
             else if (sm.state == "shoot4" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
-                sm.ChangeState("shoot5");
-            }
-            else if (sm.state == "shoot5" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
                 sm.ChangeState("forward");
             }

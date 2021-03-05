@@ -43,7 +43,7 @@ public class TestWebcam extends MasterClass {
 
         while (opModeIsActive() && !isStopRequested()) {
             if(sm.state == "webcam_Test") {
-                vision.CalcMiddle();
+                //vision.CalcMiddle();
                 telemetry.update();
             }
 
