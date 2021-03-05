@@ -15,26 +15,31 @@ public class MecTeleOp extends OpMode {
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
+
     Servo clamp1;
     Servo clamp2;
     DcMotor comp1;
     DcMotor comp2;
     DcMotor flipper;
+    DcMotor WobbleFlipper;
     Servo push;
     //DcMotor wFlip;
     Servo wClamp;
+    Servo wobble;
     int dir = 1;
     int targetPos = 500;
     boolean clamped = false;
     boolean active = false;
     boolean hasFlipped = false;
     boolean aActive = false;
-    boolean xPressed = false;
+    boolean xActive = false;
     boolean wClamped = false;
     public boolean pushReset = false;
     public int curTargetComp = 0;
+    boolean rBumper = false;
     String xState ="";
     boolean firstFrame = true;
+    ElapsedTime wobbleTimer = new ElapsedTime();
     ElapsedTime clampTime = new ElapsedTime();
     ElapsedTime flipTime = new ElapsedTime();
     ElapsedTime pushTime = new ElapsedTime();
@@ -55,6 +60,7 @@ public class MecTeleOp extends OpMode {
         comp2 = hardwareMap.dcMotor.get("comp2");
         flipper = hardwareMap.dcMotor.get("flipper");
         push = hardwareMap.servo.get("push");
+        wobble = hardwareMap.servo.get("wobble");
         clamp1 = hardwareMap.servo.get("c1");
         clamp2 = hardwareMap.servo.get("c2");
         wClamp = hardwareMap.servo.get("w1");
@@ -95,6 +101,28 @@ public class MecTeleOp extends OpMode {
         {
             wClamp.setPosition(1);
             wClamped = true;
+        }
+    }
+
+    public void moveWobble(double power, int targetEncoder, int timeout) {
+        if (power < 0) {
+            if (WobbleFlipper.getCurrentPosition() < targetEncoder - 5) {
+                WobbleFlipper.setPower(.05);
+            } else if (WobbleFlipper.getCurrentPosition() > targetEncoder) {
+                WobbleFlipper.setPower(power);
+            } else {
+                WobbleFlipper.setPower(0);
+
+            }
+        } else if (power > 0) {
+            if (WobbleFlipper.getCurrentPosition() > targetEncoder + 5) {
+                WobbleFlipper.setPower(-.05);
+            } else if (WobbleFlipper.getCurrentPosition() < targetEncoder) {
+                WobbleFlipper.setPower(power);
+            } else {
+                WobbleFlipper.setPower(0);
+
+            }
         }
     }
 
@@ -316,6 +344,23 @@ public class MecTeleOp extends OpMode {
         {
             push.setPosition(.2);
         }
+
+
+        if (gamepad2.right_bumper && wobbleTimer.milliseconds() > 500 || gamepad2.left_bumper) {
+            if(wobble.getPosition() == 30){
+               wobble.setPosition(130);
+           }
+            else if(wobble.getPosition() == 130){
+               wobble.setPosition(30);
+           }
+
+        }
+
+        if (gamepad2.left_bumper && wobbleTimer.milliseconds() > 500 || gamepad2.left_bumper) {
+            FlipWobble();
+        }
+
+
 
 
 

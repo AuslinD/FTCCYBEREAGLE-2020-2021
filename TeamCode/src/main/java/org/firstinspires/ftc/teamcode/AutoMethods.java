@@ -28,7 +28,9 @@ public class AutoMethods {
     DcMotor comp1;
     DcMotor comp2;
     DcMotor flipper;
+    DcMotor WobbleFlipper;
     Servo push;
+    Servo wobble;
     public boolean pushReset = false;
     public int curTargetComp = 2500;
     int test = 0;
@@ -329,6 +331,33 @@ public class AutoMethods {
        // wClamp.setPosition(.1);
 
 
+    }
+    public void setWobbleGoal(float position) {
+        wobble.setPosition(position);
+    }
+    public void FlipWobble(){
+        WobbleFlipper = masterClass.hardwareMap.dcMotor.get("br");
+    }
+    public void moveWobble(double power, int targetEncoder, int timeout) {
+        if (power < 0) {
+            if (WobbleFlipper.getCurrentPosition() < targetEncoder - 5) {
+                WobbleFlipper.setPower(.05);
+            } else if (WobbleFlipper.getCurrentPosition() > targetEncoder) {
+                WobbleFlipper.setPower(power);
+            } else {
+                WobbleFlipper.setPower(0);
+
+            }
+        } else if (power > 0) {
+            if (WobbleFlipper.getCurrentPosition() > targetEncoder + 5) {
+                WobbleFlipper.setPower(-.05);
+            } else if (WobbleFlipper.getCurrentPosition() < targetEncoder) {
+                WobbleFlipper.setPower(power);
+            } else {
+                WobbleFlipper.setPower(0);
+
+            }
+        }
     }
 
 }
