@@ -337,29 +337,18 @@ public class MecTeleOp extends OpMode {
         }
         if (gamepad2.left_bumper && wobbleTime.milliseconds() > 500)
         {
-            wobbleTime.reset();;
+            wobbleTime.reset();
             FlipWobble();
         }
-        if (gamepad2.right_bumper)
-        {
-            push.setPosition(.2);
-        }
-
-
-        if (gamepad2.right_bumper && wobbleTimer.milliseconds() > 500 || gamepad2.left_bumper) {
-            if(w1.getPosition() == 30){
-               w1.setPosition(130);
-           }
-            else if(w1.getPosition() == 130){
-               w1.setPosition(30);
-           }
+        if (gamepad2.right_bumper && wobbleTimer.milliseconds() > 500 ) {
+            if(w1.getPosition() == .3){
+                w1.setPosition(.7);
+            }
+            else if(w1.getPosition() == .7){
+                w1.setPosition(.3);
+            }
 
         }
-
-        if (gamepad2.left_bumper && wobbleTimer.milliseconds() > 500 || gamepad2.left_bumper) {
-            FlipWobble();
-        }
-
 
 
 
