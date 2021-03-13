@@ -95,44 +95,55 @@ public class Vision{
     }
 
     public void StrafeRightVision(String goal) throws InterruptedException{
-        while (CalcMiddle(goal) != "perfect") {
-            if (CalcMiddle(goal) == "left") {
-                    masterClass.autoMethods.Strafe(0.25);
-            } else if (CalcMiddle(goal) == "right") {
-                    masterClass.autoMethods.Strafe(-0.25);
+        double speed = CalcMiddle(goal);
+        while (Math.abs(speed) > .22) {
+            speed = CalcMiddle(goal);
+            if (speed > .5)
+            {
+                speed = .5;
             }
+            if (speed < -.5)
+            {
+                speed = -.5;
+            }
+            masterClass.telemetry.addData("speed ", speed);
+            masterClass.telemetry.addData("width ", bitmap.getWidth());
+            masterClass.telemetry.update();
+                    masterClass.autoMethods.StrafeL(speed, 0);
         }
-        masterClass.autoMethods.Strafe(0);
+        masterClass.autoMethods.StrafeR(0, 0);
     }
 
-    public int CalcLeftRight(int x, int grace, String goal) throws InterruptedException
+    public double CalcLeftRight(int x, int grace, String goal) throws InterruptedException
     {
+        double constant = .2;
+        double power = 0;
         if(goal == "left") {
-            if (bitmap.getWidth() / 1.3993 - grace > x) {
-                return -1;
-            } else if (bitmap.getWidth() / 1.3993 + grace < x) {
-                return 1;
-            } else {
-                return 0;
+            power = Math.pow((((bitmap.getWidth()) - x) / 200),2);
+            if (bitmap.getWidth() - x < 0)
+            {
+                power = -1 * Math.abs(power);
+                constant = -1 * Math.abs(constant);
             }
+            return power + constant;
         }
         if(goal == "middle") {
-            if (bitmap.getWidth() / 1.4593 - grace > x) {
-                return -1;
-            } else if (bitmap.getWidth() / 1.4593 + grace < x) {
-                return 1;
-            } else {
-                return 0;
+            power = Math.pow((((bitmap.getWidth()) - x) / 200),2);
+            if (bitmap.getWidth() - x < 0)
+            {
+                power = -1 * Math.abs(power);
+                constant = -1 * Math.abs(constant);
             }
+            return power + constant;
         }
         if(goal == "right") {
-            if (bitmap.getWidth() / 1.4993 - grace > x) {
-                return -1;
-            } else if (bitmap.getWidth() / 1.4993 + grace < x) {
-                return 1;
-            } else {
-                return 0;
+            power = Math.pow((((bitmap.getWidth()) - x) / 200),2);
+            if (bitmap.getWidth() - x < 0)
+            {
+                power = -1 * Math.abs(power);
+                constant = -1 * Math.abs(constant);
             }
+            return power + constant;
         }
         else{
             return 0;
@@ -142,7 +153,7 @@ public class Vision{
 
     }
 
-    public String CalcMiddle(String goal) throws InterruptedException
+    public double CalcMiddle(String goal) throws InterruptedException
     {
         bitmap = getBitmap();
         int width = bitmap.getWidth();
@@ -255,21 +266,8 @@ public class Vision{
         if (totalNumAvgs > 0)
            totalAvg = totalAvgs / totalNumAvgs;
 
-        if (CalcLeftRight(totalAvg, 18, goal) == 1)
-        {
-            masterClass.telemetry.addLine("right");
-            return "right";
-        }
-        else if(CalcLeftRight(totalAvg, 18, goal) == -1)
-        {
-            masterClass.telemetry.addLine("left");
-            return "left";
-        }
-        else
-        {
-            masterClass.telemetry.addLine("perfect");
-            return "perfect";
-        }
+
+        return CalcLeftRight(totalAvg, 10, goal);
 
     }
 

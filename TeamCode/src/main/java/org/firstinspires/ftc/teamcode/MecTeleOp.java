@@ -23,9 +23,7 @@ public class MecTeleOp extends OpMode {
     DcMotor flipper;
     DcMotor WobbleFlipper;
     Servo push;
-    //DcMotor wFlip;
     Servo wClamp;
-    Servo w1;
     int dir = 1;
     int targetPos = 500;
     boolean clamped = false;
@@ -60,26 +58,25 @@ public class MecTeleOp extends OpMode {
         comp2 = hardwareMap.dcMotor.get("comp2");
         flipper = hardwareMap.dcMotor.get("flipper");
         push = hardwareMap.servo.get("push");
-        w1 = hardwareMap.servo.get("w1");
         clamp1 = hardwareMap.servo.get("c1");
         clamp2 = hardwareMap.servo.get("c2");
         wClamp = hardwareMap.servo.get("w1");
-      //  wFlip = hardwareMap.dcMotor.get("wf1");
+        WobbleFlipper = hardwareMap.dcMotor.get("wf1");
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    //    wFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        WobbleFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-     //   wFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        WobbleFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-       // wFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        WobbleFlipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -87,25 +84,15 @@ public class MecTeleOp extends OpMode {
         comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clamp1.setPosition(.7);
-        clamp2.setPosition(.8);
+        clamp1.setPosition(.75);
+        clamp2.setPosition(.75);
         wClamp.setPosition(.1);
     }
 
-    public void FlipWobble()
-    {
-        if (wClamped == true) {
-            wClamp.setPosition(.5);
-            wClamped = false; // it is not clamped
-        } else
-        {
-            wClamp.setPosition(1);
-            wClamped = true;
-        }
-    }
-
     public void moveWobble(double power, int targetEncoder, int timeout) {
+        telemetry.addData("WobbleActive", 0);
         if (power < 0) {
+            telemetry.addData("lesszero", 0);
             if (WobbleFlipper.getCurrentPosition() < targetEncoder - 5) {
                 WobbleFlipper.setPower(.05);
             } else if (WobbleFlipper.getCurrentPosition() > targetEncoder) {
@@ -115,6 +102,7 @@ public class MecTeleOp extends OpMode {
 
             }
         } else if (power > 0) {
+            telemetry.addData("morezero", 0);
             if (WobbleFlipper.getCurrentPosition() > targetEncoder + 5) {
                 WobbleFlipper.setPower(-.05);
             } else if (WobbleFlipper.getCurrentPosition() < targetEncoder) {
@@ -278,6 +266,10 @@ public class MecTeleOp extends OpMode {
                 br.setPower(BRP);
                 bl.setPower(BLP);
             }
+            fl.setPower(1);
+            fr.setPower(1);
+            br.setPower(1);
+            bl.setPower(1);
 
         }
         else{
@@ -335,21 +327,30 @@ public class MecTeleOp extends OpMode {
         {
             ShootY(true);
         }
+
+
+        WobbleFlipper.setPower(.3);
+    /*'
         if (gamepad2.left_bumper && wobbleTime.milliseconds() > 500)
         {
-            wobbleTime.reset();
-            FlipWobble();
-        }
-        if (gamepad2.right_bumper && wobbleTimer.milliseconds() > 500 ) {
-            if(w1.getPosition() == .3){
-                w1.setPosition(.7);
-            }
-            else if(w1.getPosition() == .7){
-                w1.setPosition(.3);
+            while(1== 1){
+                telemetry.addLine("jkl");
+                telemetry.update();
+                moveWobble(.5,200, 5);
             }
 
         }
+        if (gamepad2.right_trigger > .1 && wobbleTimer.milliseconds() > 500 ) {
 
+            if(wClamp.getPosition() == 0){
+                wClamp.setPosition(.4);
+            }
+            else {
+                wClamp.setPosition(.3);
+            }
+
+        }
+*/
 
 
 
@@ -393,6 +394,8 @@ public class MecTeleOp extends OpMode {
             }
         }
         */
+        telemetry.addData("motor", WobbleFlipper.getCurrentPosition());
+        telemetry.addData("motor", 0);
         telemetry.addData("pusher", push.getPosition());
         telemetry.update();
 

@@ -40,6 +40,7 @@ public class AutoMethods {
     Orientation angles;
     public BNO055IMU imu;
     double curDiff = 0;
+    double constant = 0;
 
 
 
@@ -259,7 +260,7 @@ public class AutoMethods {
         fr.setPower(0);
     }
 
-    public void Strafe(double speed){// positive speed is right
+    public void StrafeR(double speed, float goal){// positive speed is right
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -268,14 +269,48 @@ public class AutoMethods {
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // positive is right
-
         if(speed > 1){
             speed = 1;
         }
-        bl.setPower(speed);
-        fl.setPower(-speed);
-        br.setPower(speed);
-        fr.setPower(-speed);
+        double largestDist = goal - getGyroYaw();
+        if (Math.abs(constant) > largestDist)
+        {
+            //constant
+        }
+        constant = (goal - getGyroYaw()) *.015;
+            bl.setPower(-speed + constant);
+            fl.setPower(speed);
+            br.setPower(-speed + constant);
+            fr.setPower(speed);
+        masterClass.telemetry.addData("state", masterClass.sm.state);
+        masterClass.telemetry.addData("GyroYaw", masterClass.autoMethods.getGyroYaw());
+
+    }
+
+    public void StrafeL(double speed, float goal){// positive speed is right
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // positive is right
+        if(speed > 1){
+            speed = 1;
+        }
+        double largestDist = goal - getGyroYaw();
+        if (Math.abs(constant) > largestDist)
+        {
+            //constant
+        }
+        constant = (goal - getGyroYaw()) *.015;
+        bl.setPower(speed );
+        fl.setPower(-speed + constant);
+        br.setPower(speed );
+        fr.setPower(-speed + constant);
+        masterClass.telemetry.addData("state", masterClass.sm.state);
+        masterClass.telemetry.addData("GyroYaw", masterClass.autoMethods.getGyroYaw());
 
     }
 

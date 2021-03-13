@@ -29,11 +29,16 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("forward_until_white");
             }
             else if (sm.state == "forward_until_white"/* && sm.stateTime.milliseconds() > 300*/) {
+                autoMethods.MoveInchEncoder(0.6, 1500);
                 navigationMethods.forwardUntil(null, "white", .2);
                 sm.ChangeState("back_from_white");
             }
             else if (sm.state == "back_from_white" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.MoveInchEncoder(-.3, 350);
+                autoMethods.MoveInchEncoder(-.3, 200);
+                sm.ChangeState("turn_from_white");
+            }
+            else if (sm.state == "turn_from_white" && sm.stateTime.milliseconds() > 300) {
+                autoMethods.turnPD(0, .2);
                 sm.ChangeState("strafe_right_to_shoot");
             }
             else if (sm.state == "strafe_right_to_shoot" && sm.stateTime.milliseconds() > 300) {
@@ -43,6 +48,9 @@ public class RedPowerShot extends MasterClass {
 
             else if(sm.state == "correct_self_middle" && sm.stateTime.milliseconds() > 300 )
             {
+                telemetry.addData("state", sm.state);
+                telemetry.addData("GyroYaw", autoMethods.getGyroYaw());
+
                 autoMethods.turnPD(0,.2);
                 vision.StrafeRightVision("left");
              //   autoMethods.turnPD(0,.2);
@@ -50,6 +58,10 @@ public class RedPowerShot extends MasterClass {
             }
             else if (sm.state == "shoot1" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
+                sm.ChangeState("reset_1");
+            }
+            else if (sm.state == "reset_1" && sm.stateTime.milliseconds() > 300) {
+                autoMethods.StrafeRight(.25, 75);
                 sm.ChangeState("correct_self_right");
             }
             else if (sm.state == "correct_self_right" && sm.stateTime.milliseconds() > 300) {
@@ -58,6 +70,10 @@ public class RedPowerShot extends MasterClass {
             }
             else if (sm.state == "shoot2" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.ShootY(false);
+                sm.ChangeState("reset_2");
+            }
+            else if (sm.state == "reset_2" && sm.stateTime.milliseconds() > 300) {
+                autoMethods.StrafeRight(.25, 75);
                 sm.ChangeState("correct_self_left");
             }
             else if (sm.state == "correct_self_left" && sm.stateTime.milliseconds() > 300) {
