@@ -29,8 +29,8 @@ public class AutoMethods {
     DcMotor comp2;
     DcMotor flipper;
     DcMotor WobbleFlipper;
+    Servo wClamp;
     Servo push;
-    Servo wobble;
     public boolean pushReset = false;
     public int curTargetComp = 2500;
     int test = 0;
@@ -40,6 +40,8 @@ public class AutoMethods {
     Orientation angles;
     public BNO055IMU imu;
     double curDiff = 0;
+    ElapsedTime wTime = new ElapsedTime();
+    ElapsedTime turnTime = new ElapsedTime();
 
 
 
@@ -221,6 +223,36 @@ public class AutoMethods {
         fr.setPower(0);
     }
 
+    public void turnPDT(int tarDegree, double speed, double timeout)
+    {
+        double startDiff = tarDegree - getGyroYaw();
+        double p = 0;
+        curDiff = startDiff;
+        double plusMin = 0;
+        turnTime.reset();
+        while(Math.abs(curDiff) > 1 && turnTime.milliseconds() < timeout)
+        {
+            curDiff = tarDegree - getGyroYaw();
+            double trueDiff = tarDegree - getGyroYaw();
+            int calc = Math.abs((int)(tarDegree - curDiff));
+            p = Math.abs(curDiff)/Math.abs(startDiff);
+            p = p * Math.signum(trueDiff);
+            plusMin = .1 * Math.signum(trueDiff);
+            bl.setPower(speed * p + plusMin);
+            fl.setPower(speed * p + plusMin);
+            br.setPower(speed * p + plusMin);
+            fr.setPower(speed * p + plusMin);
+            masterClass.telemetry.addData("getGyrowyaw", getGyroYaw());
+            masterClass.telemetry.addData("curdiff", curDiff);
+            masterClass.telemetry.addData("startd", startDiff);
+            masterClass.telemetry.update();
+        }
+        bl.setPower(0);
+        fl.setPower(0);
+        br.setPower(0);
+        fr.setPower(0);
+    }
+
     public double getGyroYaw() {
         updateGyroValues();
         return angles.firstAngle;
@@ -292,22 +324,26 @@ public class AutoMethods {
         push = masterClass.hardwareMap.servo.get("push");
         clamp1 = masterClass.hardwareMap.servo.get("c1");
         clamp2 = masterClass.hardwareMap.servo.get("c2");
-        //wClamp = hardwareMap.servo.get("w1");
+        wClamp = masterClass.hardwareMap.servo.get("w1");
+        WobbleFlipper = masterClass.hardwareMap.dcMotor.get("WobbleFlipper");
         //  wFlip = hardwareMap.dcMotor.get("wf1");
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        WobbleFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //    wFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        WobbleFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //   wFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        WobbleFlipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // wFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -316,8 +352,8 @@ public class AutoMethods {
         comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clamp1.setPosition(.42);
-        clamp2.setPosition(.6);
+        clamp1.setPosition(.7);
+        clamp2.setPosition(.8);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -333,29 +369,35 @@ public class AutoMethods {
 
     }
     public void setWobbleGoal(float position) {
-        wobble.setPosition(position);
-    }
-    public void FlipWobble(){
-        WobbleFlipper = masterClass.hardwareMap.dcMotor.get("br");
+        wClamp.setPosition(position);
     }
     public void moveWobble(double power, int targetEncoder, int timeout) {
+        wTime.reset();
         if (power < 0) {
-            if (WobbleFlipper.getCurrentPosition() < targetEncoder - 5) {
-                WobbleFlipper.setPower(.05);
-            } else if (WobbleFlipper.getCurrentPosition() > targetEncoder) {
-                WobbleFlipper.setPower(power);
-            } else {
-                WobbleFlipper.setPower(0);
+            while (WobbleFlipper.getCurrentPosition() > targetEncoder && wTime.milliseconds() < timeout) {
+                if (WobbleFlipper.getCurrentPosition() < targetEncoder) {
+                    WobbleFlipper.setPower(.05);
+                } else if (WobbleFlipper.getCurrentPosition() > targetEncoder) {
+                    WobbleFlipper.setPower(power);
+                } else {
+                    WobbleFlipper.setPower(0);
 
+                }
+                masterClass.telemetry.addData("", WobbleFlipper.getCurrentPosition());
+                masterClass.telemetry.update();
             }
         } else if (power > 0) {
-            if (WobbleFlipper.getCurrentPosition() > targetEncoder + 5) {
-                WobbleFlipper.setPower(-.05);
-            } else if (WobbleFlipper.getCurrentPosition() < targetEncoder) {
-                WobbleFlipper.setPower(power);
-            } else {
-                WobbleFlipper.setPower(0);
+            while (WobbleFlipper.getCurrentPosition() < targetEncoder && wTime.milliseconds() < timeout) {
+                if (WobbleFlipper.getCurrentPosition() > targetEncoder) {
+                    WobbleFlipper.setPower(-.05);
+                } else if (WobbleFlipper.getCurrentPosition() < targetEncoder) {
+                    WobbleFlipper.setPower(power);
+                } else {
+                    WobbleFlipper.setPower(0);
 
+                }
+                masterClass.telemetry.addData("", WobbleFlipper.getCurrentPosition());
+                masterClass.telemetry.update();
             }
         }
     }

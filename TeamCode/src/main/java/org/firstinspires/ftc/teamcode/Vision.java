@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.Debug;
+
 import com.vuforia.CameraDevice;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
@@ -39,7 +41,7 @@ public class Vision{
     int exceptionStreak;
     boolean exception;
     int thisAvg = 0;
-    int totalAvg = 0;
+    public int totalAvg = 0;
     float interval = 501;
     android.graphics.Bitmap bitmap;
     boolean first = true;
@@ -69,7 +71,6 @@ public class Vision{
 
 
             int format = picture.getImage(0).getFormat();
-            masterClass.telemetry.update();
            // if (format == 4) {
                 rgb = picture.getImage(0);
             masterClass.sleep(10);
@@ -107,54 +108,95 @@ public class Vision{
     }
 
     public void StrafeRightVision(String goal) throws InterruptedException{
-        while (CalcMiddle(goal) != "perfect") {
-            if (CalcMiddle(goal) == "left") {
-                    masterClass.autoMethods.Strafe(0.25);
-            } else if (CalcMiddle(goal) == "right") {
-                    masterClass.autoMethods.Strafe(-0.25);
+        double speed = CalcMiddle(goal);
+        while (Math.abs(speed) >.23) {
+            speed = CalcMiddle(goal);
+            if (speed < -.5)
+            {
+                speed = -.5;
             }
+            if (speed > .5)
+            {
+                speed = .5;
+            }
+            masterClass.autoMethods.Strafe(speed);
         }
         masterClass.autoMethods.Strafe(0);
     }
 
-    public int CalcLeftRight(int x, int grace, String goal) throws InterruptedException
+    public double CalcLeftRight(int x, int grace, String goal) throws InterruptedException
     {
+        double power = 0;
+        int width = bitmap.getWidth();
         if(goal == "left") {
-            if (bitmap.getWidth() / 1.3993 - grace > x) {
-                return -1;
-            } else if (bitmap.getWidth() / 1.3993 + grace < x) {
-                return 1;
-            } else {
-                return 0;
+            power = (((width/1.3193)) - x) / 300;
+            if (x == 0)
+            {
+                power = -.07;
+            }
+            if(power < 0)
+            {
+                return power - .2;
+            }
+            else
+            {
+                return power+.2;
             }
         }
         if(goal == "middle") {
-            if (bitmap.getWidth() / 1.4593 - grace > x) {
-                return -1;
-            } else if (bitmap.getWidth() / 1.4593 + grace < x) {
-                return 1;
-            } else {
-                return 0;
+            power = ((width/1.4193) - x) / 300;
+            if (x == 0)
+            {
+                power = -.07;
+            }
+            if(power < 0)
+            {
+                return power - .2;
+            }
+            else
+            {
+                return power +.2;
             }
         }
         if(goal == "right") {
-            if (bitmap.getWidth() / 1.4993 - grace > x) {
-                return -1;
-            } else if (bitmap.getWidth() / 1.4993 + grace < x) {
-                return 1;
-            } else {
-                return 0;
+            power = ((width/1.4993) - x) / 300;
+            if (x == 0)
+            {
+                power = -.07;
+            }
+            if(power < 0)
+            {
+                return power - .2;
+            }
+            else
+            {
+                return power+.2;
+            }
+        }
+        if (goal == "tower") {
+            power = ((width/4) - x) / 300;
+            if (x == 0)
+            {
+                power = -.07;
+            }
+            if(power < 0)
+            {
+                return power - .2;
+            }
+            else
+            {
+                return power+.2;
             }
         }
         else{
             return 0;
-        }
+    }
 
 
 
     }
 
-    public String CalcMiddle(String goal) throws InterruptedException
+    public double CalcMiddle(String goal) throws InterruptedException
     {
         bitmap = getBitmap();
         int width = bitmap.getWidth();
@@ -267,21 +309,11 @@ public class Vision{
         if (totalNumAvgs > 0)
            totalAvg = totalAvgs / totalNumAvgs;
 
-        if (CalcLeftRight(totalAvg, 18, goal) == 1)
-        {
-            masterClass.telemetry.addLine("right");
-            return "right";
-        }
-        else if(CalcLeftRight(totalAvg, 18, goal) == -1)
-        {
-            masterClass.telemetry.addLine("left");
-            return "left";
-        }
-        else
-        {
-            masterClass.telemetry.addLine("perfect");
-            return "perfect";
-        }
+        int retVal = totalAvg;
+        masterClass.telemetry.addData("x ", totalAvg);
+        masterClass.telemetry.update();
+
+        return CalcLeftRight(totalAvg,10, goal);
 
     }
 
@@ -290,27 +322,43 @@ public class Vision{
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
         int minNumY = (int)(.01953125 * h);
-        int fRing = (int)(.01953125 * h);
+        int fRing = (int)(.02153125 * h);
         int oRing = (int)(.00651041666 * h);
         int oS = (int)(.00146484375 * w);
         //if (interval > 500)
         {
             interval = 0;
 
+            float rThreshold = 153.0f;
+            float gMin = 81.6f;
+            float bMin = 63.75f;
 
+            int yStart = h / 4;
+            int yEnd = 3 * h / 4;
+            int xStart = w / 4;
+            int xEnd = 3 * w / 4;
 
-            float rThreshold = .75f;
-            float gThreshold = .4f;
-            float bThreshold = .35f;
+            yStart = h/2;
+            yEnd = h;
+            xStart = 0;
+            xEnd = w;
 
-            for (int y = 0; y < h; y++)
+            for (int y = yStart; y < yEnd; y++)
             {
-                for (int x = 0; x < w; x++)
+                for (int x = xStart; x < xEnd; x++)
                 {
-                    int pixel = bitmap.getPixel(x,y);;
-                    if (red(pixel) >= rThreshold && green(pixel) >= gThreshold && blue(pixel) <= bThreshold)
+                    int pixel = bitmap.getPixel(x,y);
+                    float red = red(pixel);
+                    float grn = green(pixel);
+                    float blu = blue(pixel);
+                    if (red > rThreshold && grn > gMin && blu < bMin)
                     {
                         oStreakX += 1;
+                    }
+                    if (x == w/2 && y == h/2) {
+                        masterClass.telemetry.addData("red=", red);
+                        masterClass.telemetry.addData("grn=", grn);
+                        masterClass.telemetry.addData("blu=", blu);
                     }
 
                 }
@@ -339,6 +387,7 @@ public class Vision{
                 }
             }
 
+            masterClass.telemetry.addData("avgy", numAvgY);
 
             if (numAvgY != 0)
             {
@@ -347,23 +396,47 @@ public class Vision{
 
             if (totalAvgY - firstY > fRing)
             {
-                masterClass.telemetry.addData("4", totalAvg-firstY);
+                masterClass.telemetry.addData("ta", totalAvgY);
+                masterClass.telemetry.addData("fy", firstY);
+                masterClass.telemetry.addData("4", totalAvgY-firstY);
+                masterClass.telemetry.update();
                 first = false;
                 firstY = -1;
+                avgY = 0;
+                numAvgY = 0;
+                oStreakX = 0;
+                absentY = 0;
+                totalAvgY = 0;
                 return 4;
             }
             else if (totalAvgY - firstY > oRing)
             {
-                masterClass.telemetry.addData("1", totalAvg-firstY);
+                masterClass.telemetry.addData("ta", totalAvgY);
+                masterClass.telemetry.addData("fy", firstY);
+                masterClass.telemetry.addData("1", totalAvgY-firstY);
+                masterClass.telemetry.update();
                 first = false;
                 firstY = -1;
+                avgY = 0;
+                numAvgY = 0;
+                oStreakX = 0;
+                absentY = 0;
+                totalAvgY = 0;
                 return 1;
             }
             else
             {
-                masterClass.telemetry.addData("0", totalAvg-firstY);
+                masterClass.telemetry.addData("ta", totalAvgY);
+                masterClass.telemetry.addData("fy", firstY);
+                masterClass.telemetry.addData("0", totalAvgY-firstY);
+                masterClass.telemetry.update();
                 first = false;
                 firstY = -1;
+                avgY = 0;
+                numAvgY = 0;
+                oStreakX = 0;
+                absentY = 0;
+                totalAvgY = 0;
                 return 0;
             }
         }

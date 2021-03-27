@@ -25,7 +25,6 @@ public class MecTeleOp extends OpMode {
     Servo push;
     //DcMotor wFlip;
     Servo wClamp;
-    Servo w1;
     int dir = 1;
     int targetPos = 500;
     boolean clamped = false;
@@ -34,6 +33,7 @@ public class MecTeleOp extends OpMode {
     boolean aActive = false;
     boolean xActive = false;
     boolean wClamped = false;
+    boolean wFlipped = false;
     public boolean pushReset = false;
     public int curTargetComp = 0;
     boolean rBumper = false;
@@ -60,7 +60,7 @@ public class MecTeleOp extends OpMode {
         comp2 = hardwareMap.dcMotor.get("comp2");
         flipper = hardwareMap.dcMotor.get("flipper");
         push = hardwareMap.servo.get("push");
-        w1 = hardwareMap.servo.get("w1");
+        WobbleFlipper = hardwareMap.dcMotor.get("WobbleFlipper");
         clamp1 = hardwareMap.servo.get("c1");
         clamp2 = hardwareMap.servo.get("c2");
         wClamp = hardwareMap.servo.get("w1");
@@ -69,17 +69,17 @@ public class MecTeleOp extends OpMode {
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    //    wFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        WobbleFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-     //   wFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        WobbleFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-       // wFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        WobbleFlipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -92,14 +92,14 @@ public class MecTeleOp extends OpMode {
         wClamp.setPosition(.1);
     }
 
-    public void FlipWobble()
+    public void ClampWobble()
     {
         if (wClamped == true) {
-            wClamp.setPosition(.5);
+            wClamp.setPosition(.7);
             wClamped = false; // it is not clamped
         } else
         {
-            wClamp.setPosition(1);
+            wClamp.setPosition(.15);
             wClamped = true;
         }
     }
@@ -153,8 +153,8 @@ public class MecTeleOp extends OpMode {
         {
             if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
                 pushReset = true;
-                comp1.setPower(1);
-                comp2.setPower(-1);
+                comp1.setPower(.5);
+                comp2.setPower(-.5);
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
                     push.setPosition(.45);
                 }
@@ -338,16 +338,19 @@ public class MecTeleOp extends OpMode {
         if (gamepad2.left_bumper && wobbleTime.milliseconds() > 500)
         {
             wobbleTime.reset();
-            FlipWobble();
+            ClampWobble();
         }
-        if (gamepad2.right_bumper && wobbleTimer.milliseconds() > 500 ) {
-            if(w1.getPosition() == .3){
-                w1.setPosition(.7);
-            }
-            else if(w1.getPosition() == .7){
-                w1.setPosition(.3);
-            }
-
+        if (gamepad2.right_trigger > .1)
+        {
+                moveWobble(1, 200, 5);
+        }
+        else if (gamepad2.left_trigger > .1)
+        {
+            moveWobble(-.2, 0, 5);
+        }
+        if (gamepad2.right_bumper)
+        {
+            push.setPosition(.2);
         }
 
 
