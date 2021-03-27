@@ -42,18 +42,6 @@ public class Vision{
     int totalAvg = 0;
     float interval = 501;
     android.graphics.Bitmap bitmap;
-    boolean first = true;
-    int num = 0;
-    int oStreakX = 0;
-    int oStreakY = 0;
-    float avgY = 0;
-    int numAvgY = 0;
-    int xs = 0;
-    int possibleX = 0;
-    int firstY = -1;
-    int lastY = 0;
-    int absentY = 0;
-    float totalAvgY = 0;
 
 
     public android.graphics.Bitmap getBitmap() throws InterruptedException {
@@ -283,89 +271,53 @@ public class Vision{
 
     }
 
-    public int returnDisks() throws InterruptedException {
-        bitmap = getBitmap();
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        int minNumY = (int)(.01953125 * h);
-        int fRing = (int)(.01953125 * h);
-        int oRing = (int)(.00651041666 * h);
-        int oS = (int)(.00146484375 * w);
-        //if (interval > 500)
-        {
-            interval = 0;
-
-
-
-            float rThreshold = .75f;
-            float gThreshold = .4f;
-            float bThreshold = .35f;
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    int pixel = bitmap.getPixel(x,y);;
-                    if (red(pixel) >= rThreshold && green(pixel) >= gThreshold && blue(pixel) <= bThreshold)
-                    {
-                        oStreakX += 1;
-                    }
-
-                }
-                if (oStreakX > oS)
-                {
-                    absentY += 1;
-                    numAvgY += 1;
-                    avgY += y;
-                    if (firstY == -1)
-                    {
-                        firstY = y;
-                    }
-                    lastY = y;
-                }
-                else
-                {
-                    if (absentY > 0)
-                    {
-                        absentY -= 1;
-                    }
-                }
-                oStreakX = 0;
-                if (numAvgY > minNumY && absentY == 0)
-                {
-                    break;
+    public int ReturnDisks() throws InterruptedException {
+        int xMax = bitmap.getWidth();
+        int yMax = bitmap.getHeight();
+        int orangeX = 0;
+        int otherX = 0;
+        int orangeY = 0;
+        int x = 0;
+        int y = 0;
+        int numDisks = 0;
+        boolean endLoop = false;
+        while (!endLoop) {
+            for (x = 0; x < xMax; x += 4) {
+                if (red(getPix(x, y)) > 230 && green(getPix(x, y)) > 100 && green(getPix(x, y)) < 240) {
+                    orangeX += 1;
+                } else {
+                    otherX += 1;
                 }
             }
-
-
-            if (numAvgY != 0)
-            {
-                totalAvgY = avgY / numAvgY;
+            y += 2;
+            if (orangeX / otherX > .33) {
+                orangeY += 1;
             }
-
-            if (totalAvgY - firstY > fRing)
-            {
-                masterClass.telemetry.addData("4", totalAvg-firstY);
-                first = false;
-                firstY = -1;
-                return 4;
+            if (y > yMax - 3) {
+                endLoop = true;
             }
-            else if (totalAvgY - firstY > oRing)
-            {
-                masterClass.telemetry.addData("1", totalAvg-firstY);
-                first = false;
-                firstY = -1;
-                return 1;
-            }
-            else
-            {
-                masterClass.telemetry.addData("0", totalAvg-firstY);
-                first = false;
-                firstY = -1;
-                return 0;
+            if (orangeY > 50) {
+                numDisks = 2;
+            } else if (orangeY > 10) {
+                numDisks = 1;
+            } else {
+                numDisks = 0;
             }
         }
+        return numDisks;
     }
+
+    /*public int AimBotDir() throws InterruptedException
+    {
+        int xMax = getWidth();
+        int yMax = getHeight();
+        int y = 0;
+        for (int x = 0; x < xMax; x++)
+        {
+            if (red(getPix(x,y)) > 220 || (red(getPix(x,y)) > green(getPix(x,y)) + blue(getPix(x,y)) && red(getPix(x,y)) > 160))
+        }
+    }
+    */
 
     public void initVision(MasterClass mClass)
     {
