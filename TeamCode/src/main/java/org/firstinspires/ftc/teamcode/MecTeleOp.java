@@ -126,8 +126,7 @@ public class MecTeleOp extends OpMode {
         }
     }
 
-    public void ShootY(boolean tele)
-    {
+    public void ShootY(boolean tele) {
         if (!tele) {
             while ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
                 pushReset = true;
@@ -155,6 +154,9 @@ public class MecTeleOp extends OpMode {
                 pushReset = true;
                 comp1.setPower(1);
                 comp2.setPower(-1);
+                
+                // We need to make it charge up for a second
+
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
                     push.setPosition(.45);
                 }
