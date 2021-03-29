@@ -8,6 +8,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Autonomous(name="redPowerShot", group="Auto")
 public class RedPowerShot extends MasterClass {
     int numDisks = 0;
+    int numofF = 0;
+    int numofO = 0;
+    int numofZ = 0;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -24,10 +27,36 @@ public class RedPowerShot extends MasterClass {
 
             if (sm.state == "locate_disks") {
                 numDisks = vision.returnDisks();
-                sm.ChangeState("forward_until_white");
+                if (numDisks == 4)
+                {
+                    numofF += 1;
+                }
+                if (numDisks == 1)
+                {
+                    numofO += 1;
+                }
+                if (numDisks == 0)
+                {
+                    numofZ += 1;
+                }
+                if(numofF > 3)
+                {
+                    numDisks = 4;
+                    sm.ChangeState("forward_until_white");
+                }
+                if(numofO > 3)
+                {
+                    numDisks = 1;
+                    sm.ChangeState("forward_until_white");
+                }
+                if(numofZ > 3)
+                {
+                    numDisks = 0;
+                    sm.ChangeState("forward_until_white");
+                }
             }
             else if (sm.state == "forward_until_white"/* && sm.stateTime.milliseconds() > 300*/) {
-                autoMethods.MoveInchEncoder(.5,1000);
+                autoMethods.MoveInchEncoder(.5,1700);
                 navigationMethods.forwardUntil(null, "white", .2);
                 sm.ChangeState("strafe_right_to_goal");
             }
@@ -43,6 +72,8 @@ public class RedPowerShot extends MasterClass {
                     autoMethods.moveWobble(-.4, -100, 1000);
                     autoMethods.setWobbleGoal(.7f);
                     autoMethods.moveWobble(.4, 100, 1000);
+                    autoMethods.MoveInchEncoder(.4, 350);
+                    autoMethods.turnPDT(0,.55, 3000);
                     sm.ChangeState("correct_self_middle");
                 }
                 else if(numDisks == 1)
@@ -70,17 +101,17 @@ public class RedPowerShot extends MasterClass {
 
             else if(sm.state == "correct_self_middle" && sm.stateTime.milliseconds() > 300 )
             {
-                autoMethods.turnPDT(0,.35, 3000);
+                autoMethods.turnPDT(0,.30, 3000);
                 autoMethods.StrafeRight(.4, 700);
                 vision.StrafeRightVision("tower");
              //   autoMethods.turnPD(0,.2);
                 sm.ChangeState("shoot1");
             }
             else if (sm.state == "shoot1" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
-                autoMethods.ShootY(false);
-                autoMethods.ShootY(false);
-                autoMethods.ShootY(false);
+                autoMethods.ShootY(false, .45);
+                autoMethods.ShootY(false, .45);
+                autoMethods.ShootY(false, .45);
+                autoMethods.ShootY(false, .45);
                 sm.ChangeState("correct_self_right");
             }
             else if (sm.state == "forward" && sm.stateTime.milliseconds() > 300) {

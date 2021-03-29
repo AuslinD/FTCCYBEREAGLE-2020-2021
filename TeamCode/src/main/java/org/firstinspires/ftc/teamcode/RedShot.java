@@ -47,23 +47,23 @@ public class RedShot extends MasterClass {
                 sm.ChangeState("shoot1");
             }
             else if (sm.state == "shoot1" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
+                autoMethods.ShootY(false, .5);
                 sm.ChangeState("shoot2");
             }
             else if (sm.state == "shoot2" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
+                autoMethods.ShootY(false, .5);
                 sm.ChangeState("shoot3");
             }
             else if (sm.state == "shoot3" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
+                autoMethods.ShootY(false, .5);
                 sm.ChangeState("shoot4");
             }
             else if (sm.state == "shoot4" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
+                autoMethods.ShootY(false, .5);
                 sm.ChangeState("shoot5");
             }
             else if (sm.state == "shoot5" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false);
+                autoMethods.ShootY(false, .5);
                 sm.ChangeState("forward");
             }
             else if (sm.state == "forward" && sm.stateTime.milliseconds() > 300) {

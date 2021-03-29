@@ -102,13 +102,13 @@ public class AutoMethods {
             fl.setPower((leftBackPower));
         }
 
-    public void ShootY(boolean tele)
+    public void ShootY(boolean tele, double power)
     {
         if (!tele) {
             while ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
                 pushReset = true;
-                comp1.setPower(1);
-                comp2.setPower(-1);
+                comp1.setPower(power);
+                comp2.setPower(-power);
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
                     push.setPosition(.45);
                 }

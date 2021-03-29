@@ -131,8 +131,8 @@ public class MecTeleOp extends OpMode {
         if (!tele) {
             while ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
                 pushReset = true;
-                comp1.setPower(1);
-                comp2.setPower(-1);
+                comp1.setPower(.55);
+                comp2.setPower(-.55);
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
                     push.setPosition(.45);
                 }
@@ -144,7 +144,7 @@ public class MecTeleOp extends OpMode {
                 }
             }
 
-            curTargetComp += 2500;
+            curTargetComp += 4000;
             pushReset = false;
             comp1.setPower(0);
             comp2.setPower(0);
@@ -153,8 +153,8 @@ public class MecTeleOp extends OpMode {
         {
             if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
                 pushReset = true;
-                comp1.setPower(.5);
-                comp2.setPower(-.5);
+                comp1.setPower(.35);
+                comp2.setPower(-.35);
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
                     push.setPosition(.45);
                 }
@@ -167,7 +167,7 @@ public class MecTeleOp extends OpMode {
             }
             else {
 
-                curTargetComp += 2500;
+                curTargetComp += 4000;
                 pushReset = false;
                 comp1.setPower(0);
                 comp2.setPower(0);

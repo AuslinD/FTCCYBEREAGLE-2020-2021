@@ -322,8 +322,8 @@ public class Vision{
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
         int minNumY = (int)(.01953125 * h);
-        int fRing = (int)(.02153125 * h);
-        int oRing = (int)(.00651041666 * h);
+        int fRing = (int)(.0853125 * h);
+        int oRing = (int)(.01041666 * h);
         int oS = (int)(.00146484375 * w);
         //if (interval > 500)
         {
@@ -338,7 +338,7 @@ public class Vision{
             int xStart = w / 4;
             int xEnd = 3 * w / 4;
 
-            yStart = h/2;
+            yStart = (int)(h/(1.5));
             yEnd = h;
             xStart = 0;
             xEnd = w;

@@ -43,7 +43,10 @@ public class TestWebcam extends MasterClass {
 
         while (opModeIsActive() && !isStopRequested()) {
             if(sm.state == "webcam_Test") {
-                vision.StrafeRightVision("tower");
+                telemetry.addData("disks", vision.returnDisks());
+                telemetry.update();
+
+
 
             }
 
