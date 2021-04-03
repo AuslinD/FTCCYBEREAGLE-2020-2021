@@ -158,7 +158,6 @@ public class WebcamReader  {
     }
 
 
-
     //----------------------------------------------------------------------------------------------
     // Camera operations
     //----------------------------------------------------------------------------------------------
@@ -217,9 +216,11 @@ public class WebcamReader  {
                                 @Override public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
                                     /** A new frame is available. The frame data has <em>not</em> been copied for us, and we can only access it
                                      * for the duration of the callback. So we copy here manually. */
-                                    curBitmap = (curBitmap+1) % numBitmaps;
-                                    if (curBitmap == lockedBitmap)
-                                        curBitmap = (curBitmap+1) % numBitmaps;
+                                    int cb = curBitmap;
+                                    cb = (cb+1) % numBitmaps;
+                                    if (cb == lockedBitmap)
+                                        cb = (cb+1) % numBitmaps;
+                                    curBitmap = cb;
 
                                     if (GetBitmapByIndex(curBitmap)==null)
                                         SetBitmapByIndex( curBitmap, captureRequest.createEmptyBitmap());
@@ -280,7 +281,6 @@ public class WebcamReader  {
     //----------------------------------------------------------------------------------------------
     // Utilities
     //----------------------------------------------------------------------------------------------
-
 
     private boolean contains(int[] array, int value) {
         for (int i : array) {
