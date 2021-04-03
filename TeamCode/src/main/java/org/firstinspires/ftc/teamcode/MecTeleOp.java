@@ -70,6 +70,8 @@ public class MecTeleOp extends OpMode {
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         WobbleFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        comp1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        comp2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -153,8 +155,8 @@ public class MecTeleOp extends OpMode {
         {
             if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
                 pushReset = true;
-                comp1.setPower(.35);
-                comp2.setPower(-.35);
+                comp1.setPower(.45);
+                comp2.setPower(-.45);
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
                     push.setPosition(.45);
                 }
@@ -167,7 +169,7 @@ public class MecTeleOp extends OpMode {
             }
             else {
 
-                curTargetComp += 4000;
+                curTargetComp += 2500;
                 pushReset = false;
                 comp1.setPower(0);
                 comp2.setPower(0);
@@ -233,14 +235,14 @@ public class MecTeleOp extends OpMode {
         {
             // clamping
             clamped = true;
-            clamp1.setPosition(.6);
+            clamp1.setPosition(.65);
             clamp2.setPosition(1);
         }
         else
         {
             // unclamping
             clamped = false;
-            clamp1.setPosition(.75);
+            clamp1.setPosition(.85);
             clamp2.setPosition(.75);
         }
         finishedState = true;
@@ -346,7 +348,7 @@ public class MecTeleOp extends OpMode {
         }
         else if (gamepad2.left_trigger > .1)
         {
-            moveWobble(-.2, 0, 5);
+            moveWobble(-1, -200, 5);
         }
         if (gamepad2.right_bumper)
         {

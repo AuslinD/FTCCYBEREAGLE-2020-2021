@@ -34,6 +34,7 @@ public class TestWebcam extends MasterClass {
     }
     @Override
     public void runOpMode() throws InterruptedException {
+
         waitForStart();
         Initialize();
         Init();
@@ -43,11 +44,10 @@ public class TestWebcam extends MasterClass {
 
         while (opModeIsActive() && !isStopRequested()) {
             if(sm.state == "webcam_Test") {
-                telemetry.addData("disks", vision.returnDisks());
-                telemetry.update();
+                vision.returnDisks();
 
 
-
+               telemetry.update();
             }
 
 

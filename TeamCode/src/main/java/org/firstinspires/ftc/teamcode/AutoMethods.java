@@ -372,6 +372,8 @@ public class AutoMethods {
         wClamp.setPosition(position);
     }
     public void moveWobble(double power, int targetEncoder, int timeout) {
+        WobbleFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        WobbleFlipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         wTime.reset();
         if (power < 0) {
             while (WobbleFlipper.getCurrentPosition() > targetEncoder && wTime.milliseconds() < timeout) {

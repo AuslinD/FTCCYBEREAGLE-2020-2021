@@ -21,8 +21,6 @@ public class RedPowerShot extends MasterClass {
 
         while (opModeIsActive() && !isStopRequested()) {
 
-            telemetry.addData("state ", sm.state);
-            telemetry.update();
 
 
             if (sm.state == "locate_disks") {
@@ -87,7 +85,7 @@ public class RedPowerShot extends MasterClass {
                 }
                 else if(numDisks == 4)
                 {
-                    autoMethods.MoveInchEncoder(.3, 700);
+                    autoMethods.MoveInchEncoder(.3, 600);
                     autoMethods.StrafeRight(.4, 1500);
                     autoMethods.moveWobble(-.4, -100, 1000);
                     autoMethods.setWobbleGoal(.7f);
@@ -104,6 +102,7 @@ public class RedPowerShot extends MasterClass {
                 autoMethods.turnPDT(0,.30, 3000);
                 autoMethods.StrafeRight(.4, 700);
                 vision.StrafeRightVision("tower");
+                autoMethods.turnPDT(0, .2, 1000);
              //   autoMethods.turnPD(0,.2);
                 sm.ChangeState("shoot1");
             }
@@ -124,6 +123,9 @@ public class RedPowerShot extends MasterClass {
                 sm.ChangeState("");
             }
         }
+
+        telemetry.addData("state ", sm.state);
+        telemetry.update();
 
 
 

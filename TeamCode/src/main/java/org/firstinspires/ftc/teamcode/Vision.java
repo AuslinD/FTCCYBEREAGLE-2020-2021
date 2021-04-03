@@ -55,44 +55,55 @@ public class Vision{
     int firstY = -1;
     int lastY = 0;
     int absentY = 0;
+    boolean usingVuforia = false;
     float totalAvgY = 0;
+    WebcamReader wcr = null;
 
 
     public android.graphics.Bitmap getBitmap() throws InterruptedException {
 
-        vuforia.setFrameQueueCapacity(10);
-        VuforiaLocalizer.CloseableFrame picture;
-        picture = vuforia.getFrameQueue().take();
+        if (usingVuforia) {
+            vuforia.setFrameQueueCapacity(10);
+            VuforiaLocalizer.CloseableFrame picture;
+            picture = vuforia.getFrameQueue().take();
 
-        Image rgb;
+            Image rgb;
 
-        long numImages = picture.getNumImages();
-
-
-
+            long numImages = picture.getNumImages();
             int format = picture.getImage(0).getFormat();
-           // if (format == 4) {
-                rgb = picture.getImage(0);
+            // if (format == 4) {
+            rgb = picture.getImage(0);
             masterClass.sleep(10);
             // else {
-               // masterClass.telemetry.addLine("Didn't find correct RGB format");
+            // masterClass.telemetry.addLine("Didn't find correct RGB format");
 
+            //  }
+            android.graphics.Bitmap imageBitmap = android.graphics.Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), android.graphics.Bitmap.Config.RGB_565);
+            imageBitmap.copyPixelsFromBuffer(rgb.getPixels());
+            //masterClass.sleep(500);
 
-          //  }
+            picture.close();
 
+            return imageBitmap;
+        }
+        else {
+            int waits = 0;
+            bitmap = null;
 
+            // Wait for at most 2 seconds
+            while (bitmap == null && waits < 20) {
+                bitmap = wcr.GetLastBitmap();
+                masterClass.sleep(100);
+                waits++;
 
-        android.graphics.Bitmap imageBitmap = android.graphics.Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), android.graphics.Bitmap.Config.RGB_565);
-        imageBitmap.copyPixelsFromBuffer(rgb.getPixels());
+            }
+            if (bitmap != null)
+                return bitmap;
 
+            masterClass.telemetry.addLine("Could not get bitmap");
 
-
-
-        //masterClass.sleep(500);
-
-        picture.close();
-
-        return imageBitmap;
+            return null;
+        }
     }
 
 
@@ -329,7 +340,7 @@ public class Vision{
         {
             interval = 0;
 
-            float rThreshold = 153.0f;
+            float rThreshold = 153.0f; // 153 81 63
             float gMin = 81.6f;
             float bMin = 63.75f;
 
@@ -338,12 +349,21 @@ public class Vision{
             int xStart = w / 4;
             int xEnd = 3 * w / 4;
 
-            yStart = (int)(h/(1.5));
+            yStart = 0;//(int)(h/(1.0));
             yEnd = h;
             xStart = 0;
             xEnd = w;
 
-            for (int y = yStart; y < yEnd; y++)
+            first = false;
+            firstY = -1;
+            avgY = 0;
+            numAvgY = 0;
+            oStreakX = 0;
+            absentY = 0;
+            totalAvgY = 0;
+
+
+            for (int y = yEnd-1; y > yStart; y--)
             {
                 for (int x = xStart; x < xEnd; x++)
                 {
@@ -359,12 +379,12 @@ public class Vision{
                         masterClass.telemetry.addData("red=", red);
                         masterClass.telemetry.addData("grn=", grn);
                         masterClass.telemetry.addData("blu=", blu);
+                        //masterClass.telemetry.update();
                     }
 
                 }
                 if (oStreakX > oS)
                 {
-                    absentY += 1;
                     numAvgY += 1;
                     avgY += y;
                     if (firstY == -1)
@@ -375,18 +395,18 @@ public class Vision{
                 }
                 else
                 {
-                    if (absentY > 0)
+                    if (firstY != -1)
                     {
-                        absentY -= 1;
+                        absentY++;
                     }
                 }
                 oStreakX = 0;
-                if (numAvgY > minNumY && absentY == 0)
+                if (absentY > fRing)
                 {
-                    break;
+                   // break;
                 }
             }
-
+            masterClass.telemetry.addData("absy", absentY);
             masterClass.telemetry.addData("avgy", numAvgY);
 
             if (numAvgY != 0)
@@ -394,70 +414,51 @@ public class Vision{
                 totalAvgY = avgY / numAvgY;
             }
 
+            masterClass.telemetry.addData("ta", totalAvgY);
+            masterClass.telemetry.addData("fy", firstY);
+
             if (totalAvgY - firstY > fRing)
             {
-                masterClass.telemetry.addData("ta", totalAvgY);
-                masterClass.telemetry.addData("fy", firstY);
-                masterClass.telemetry.addData("4", totalAvgY-firstY);
-                masterClass.telemetry.update();
-                first = false;
-                firstY = -1;
-                avgY = 0;
-                numAvgY = 0;
-                oStreakX = 0;
-                absentY = 0;
-                totalAvgY = 0;
+                masterClass.telemetry.addData("4", firstY-totalAvgY);
                 return 4;
             }
             else if (totalAvgY - firstY > oRing)
             {
-                masterClass.telemetry.addData("ta", totalAvgY);
-                masterClass.telemetry.addData("fy", firstY);
-                masterClass.telemetry.addData("1", totalAvgY-firstY);
-                masterClass.telemetry.update();
-                first = false;
-                firstY = -1;
-                avgY = 0;
-                numAvgY = 0;
-                oStreakX = 0;
-                absentY = 0;
-                totalAvgY = 0;
+                masterClass.telemetry.addData("1", firstY-totalAvgY);
                 return 1;
             }
             else
             {
-                masterClass.telemetry.addData("ta", totalAvgY);
-                masterClass.telemetry.addData("fy", firstY);
-                masterClass.telemetry.addData("0", totalAvgY-firstY);
-                masterClass.telemetry.update();
-                first = false;
-                firstY = -1;
-                avgY = 0;
-                numAvgY = 0;
-                oStreakX = 0;
-                absentY = 0;
-                totalAvgY = 0;
+                masterClass.telemetry.addData("0", firstY-totalAvgY);
                 return 0;
             }
         }
     }
 
-    public void initVision(MasterClass mClass)
-    {
 
-        masterClass = mClass;
+    public void initVision(MasterClass mClass) {
+        if (usingVuforia ) {
+            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+            String VUFORIA_KEY =
+                    "AQswYz7/////AAABmcNWVtOSYEEXpQufuBKrdNMSKO5UAESlpwf1GyWOEzZMytfVdfY2BsxJop+3JkhqYQEby7j5SJHbcw6kSDuMe40rGeec5vJtb9m+qxy8jqy8EuBZ8n9IAldRtolwfIBkMI+d9+EkoqSBiZwhSWDzT0EVw83o3H+WzzMmj91dURhqRNzdHjEz0lUUgwDNrfNuW3oGPn1A1alADdHYnnAo++SiO9m4hHPVkdomVSxNjxu3I6whv16zWlQTLdK97POf2t37U+rS/2hZ5GSNG054PtWDppXH+ec8XNrDfys6+OmeG/m6MFvNjoUAyUgV7bsqMM+QUM3eTI3/FENR6PZ3VND47T3Dm74Hxkor++lEZHEi";
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        String VUFORIA_KEY =
-                "AQswYz7/////AAABmcNWVtOSYEEXpQufuBKrdNMSKO5UAESlpwf1GyWOEzZMytfVdfY2BsxJop+3JkhqYQEby7j5SJHbcw6kSDuMe40rGeec5vJtb9m+qxy8jqy8EuBZ8n9IAldRtolwfIBkMI+d9+EkoqSBiZwhSWDzT0EVw83o3H+WzzMmj91dURhqRNzdHjEz0lUUgwDNrfNuW3oGPn1A1alADdHYnnAo++SiO9m4hHPVkdomVSxNjxu3I6whv16zWlQTLdK97POf2t37U+rS/2hZ5GSNG054PtWDppXH+ec8XNrDfys6+OmeG/m6MFvNjoUAyUgV7bsqMM+QUM3eTI3/FENR6PZ3VND47T3Dm74Hxkor++lEZHEi";
+            webcam = masterClass.hardwareMap.get(WebcamName.class, "Webcam 1");
+            parameters.vuforiaLicenseKey = VUFORIA_KEY;
+            int cameraMonitorViewId = masterClass.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", masterClass.hardwareMap.appContext.getPackageName());
+            parameters.cameraName = webcam;
+            vuforia = ClassFactory.getInstance().createVuforia(parameters);
+            vuforia.enableConvertFrameToBitmap();
+            masterClass.idle();
+        }
+        else
+        {
+            masterClass = mClass;
+            wcr = new WebcamReader();
+            wcr.Init(masterClass);
+            masterClass.idle();
 
-        webcam = masterClass.hardwareMap.get(WebcamName.class, "Webcam 1");
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        int cameraMonitorViewId = masterClass.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", masterClass.hardwareMap.appContext.getPackageName());
-        parameters.cameraName = webcam;
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        vuforia.enableConvertFrameToBitmap();
-        masterClass.idle();
+        }
+
     }
 
 }
