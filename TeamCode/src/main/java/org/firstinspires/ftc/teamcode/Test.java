@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
         (name = "Test", group = "test")
+//test
 public class Test extends MasterClass {
     public void runOpMode() {
         Initialize();
