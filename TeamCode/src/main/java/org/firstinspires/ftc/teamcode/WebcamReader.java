@@ -96,8 +96,7 @@ public class WebcamReader  {
     /** The queue into which all frames from the camera are placed as they become available.
      * Frames which are not processed by the OpMode are automatically discarded. */
     private EvictingBlockingQueue<Bitmap> frameQueue;
-
-
+    
     /** A utility object that indicates where the asynchronous callbacks from the camera
      * infrastructure are to run. In this OpMode, that's all hidden from you (but see {@link #startCamera}
      * if you're curious): no knowledge of multi-threading is needed here. */
