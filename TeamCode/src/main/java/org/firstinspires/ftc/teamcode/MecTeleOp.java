@@ -38,12 +38,14 @@ public class MecTeleOp extends OpMode {
     public int curTargetComp = 0;
     boolean rBumper = false;
     String xState ="";
+    public float upCount = 0;
     boolean firstFrame = true;
     ElapsedTime wobbleTimer = new ElapsedTime();
     ElapsedTime clampTime = new ElapsedTime();
     ElapsedTime flipTime = new ElapsedTime();
     ElapsedTime pushTime = new ElapsedTime();
     ElapsedTime wobbleTime = new ElapsedTime();
+    ElapsedTime dPadWait = new ElapsedTime();
     AutoMethods autoMethods = new AutoMethods();
     StateMachine stateMachine = new StateMachine();
     boolean finishedState = false;
@@ -89,8 +91,8 @@ public class MecTeleOp extends OpMode {
         comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clamp1.setPosition(.7);
-        clamp2.setPosition(.8);
+        clamp1.setPosition(.85);
+        clamp2.setPosition(.75);
         wClamp.setPosition(.1);
     }
 
@@ -155,8 +157,8 @@ public class MecTeleOp extends OpMode {
         {
             if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
                 pushReset = true;
-                comp1.setPower(.45);
-                comp2.setPower(-.45);
+                comp1.setPower(.45 + upCount);
+                comp2.setPower(-.45 - upCount);
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
                     push.setPosition(.45);
                 }
@@ -344,16 +346,35 @@ public class MecTeleOp extends OpMode {
         }
         if (gamepad2.right_trigger > .1)
         {
-                moveWobble(1, 200, 5);
+                moveWobble(-1, -200, 5);
         }
         else if (gamepad2.left_trigger > .1)
         {
-            moveWobble(-1, -200, 5);
+            moveWobble(.3, 200, 5);
         }
         if (gamepad2.right_bumper)
         {
             push.setPosition(.2);
         }
+        if(gamepad2.dpad_up && dPadWait.milliseconds() > 500)
+        {
+            dPadWait.reset();
+            upCount += .02;
+            if (upCount > .54f)
+            {
+                upCount = .54f;
+            }
+        }
+        if(gamepad2.dpad_down && dPadWait.milliseconds() > 500)
+        {
+            dPadWait.reset();
+            upCount -= .02;
+            if (upCount < -.44f)
+            {
+                upCount = -.44f;
+            }
+        }
+        telemetry.addData("upCount ", upCount);
 
 
 

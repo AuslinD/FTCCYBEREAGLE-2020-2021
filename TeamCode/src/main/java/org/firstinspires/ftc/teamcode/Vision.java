@@ -91,14 +91,13 @@ public class Vision{
             bitmap = null;
 
             // Wait for at most 2 seconds
-            while (bitmap == null && waits < 20) {
+            while (waits < 20) {
                 bitmap = wcr.GetLastBitmap();
+                if (bitmap != null)
+                    return bitmap;
                 masterClass.sleep(100);
                 waits++;
-
             }
-            if (bitmap != null)
-                return bitmap;
 
             masterClass.telemetry.addLine("Could not get bitmap");
 
@@ -188,14 +187,23 @@ public class Vision{
             power = ((width/4) - x) / 300;
             if (x == 0)
             {
-                power = -.07;
+                masterClass.telemetry.addData("power > 0 ", power);
+                masterClass.telemetry.addData("x ", x);
+                masterClass.telemetry.update();
+                power = .07;
             }
             if(power < 0)
             {
+                masterClass.telemetry.addData("power < 0 ", power);
+                masterClass.telemetry.addData("x ", x);
+                masterClass.telemetry.update();
                 return power - .2;
             }
             else
             {
+                masterClass.telemetry.addData("power < 0 ", power);
+                masterClass.telemetry.addData("x ", x);
+                masterClass.telemetry.update();
                 return power+.2;
             }
         }
@@ -321,8 +329,8 @@ public class Vision{
            totalAvg = totalAvgs / totalNumAvgs;
 
         int retVal = totalAvg;
-        masterClass.telemetry.addData("x ", totalAvg);
-        masterClass.telemetry.update();
+      //  masterClass.telemetry.addData("x ", totalAvg);
+       // masterClass.telemetry.update();
 
         return CalcLeftRight(totalAvg,10, goal);
 
@@ -333,16 +341,16 @@ public class Vision{
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
         int minNumY = (int)(.01953125 * h);
-        int fRing = (int)(.0853125 * h);
-        int oRing = (int)(.01041666 * h);
+        int fRing = (int)(.044464 * h);
+        int oRing = (int)(.01 * h);
         int oS = (int)(.00146484375 * w);
         //if (interval > 500)
         {
             interval = 0;
 
-            float rThreshold = 153.0f; // 153 81 63
-            float gMin = 81.6f;
-            float bMin = 63.75f;
+            int rThreshold = 153; // 153 81 63
+            int gMin = 81;
+            int bMin = 63;
 
             int yStart = h / 4;
             int yEnd = 3 * h / 4;
@@ -368,9 +376,9 @@ public class Vision{
                 for (int x = xStart; x < xEnd; x++)
                 {
                     int pixel = bitmap.getPixel(x,y);
-                    float red = red(pixel);
-                    float grn = green(pixel);
-                    float blu = blue(pixel);
+                    int red = red(pixel);
+                    int grn = green(pixel);
+                    int blu = blue(pixel);
                     if (red > rThreshold && grn > gMin && blu < bMin)
                     {
                         oStreakX += 1;
@@ -401,9 +409,9 @@ public class Vision{
                     }
                 }
                 oStreakX = 0;
-                if (absentY > fRing)
+                if (numAvgY > minNumY && absentY > 30)
                 {
-                   // break;
+                    break;
                 }
             }
             masterClass.telemetry.addData("absy", absentY);
@@ -417,12 +425,12 @@ public class Vision{
             masterClass.telemetry.addData("ta", totalAvgY);
             masterClass.telemetry.addData("fy", firstY);
 
-            if (totalAvgY - firstY > fRing)
+            if (firstY - totalAvgY > fRing && firstY - totalAvgY < 45)
             {
                 masterClass.telemetry.addData("4", firstY-totalAvgY);
                 return 4;
             }
-            else if (totalAvgY - firstY > oRing)
+            else if (firstY - totalAvgY > oRing && firstY - totalAvgY < 45)
             {
                 masterClass.telemetry.addData("1", firstY-totalAvgY);
                 return 1;

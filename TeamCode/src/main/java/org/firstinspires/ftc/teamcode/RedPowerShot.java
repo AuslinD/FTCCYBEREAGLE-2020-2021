@@ -60,7 +60,7 @@ public class RedPowerShot extends MasterClass {
             }
             else if (sm.state == "strafe_right_to_goal" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.turnPDT(-90, .4, 2000);
-                autoMethods.MoveInchEncoder(.7, 900);
+                autoMethods.MoveInchEncoder(.7, 750);
                 sm.ChangeState("decide_path");
             }
             else if (sm.state == "decide_path" && sm.stateTime.milliseconds() > 300) {
@@ -100,18 +100,18 @@ public class RedPowerShot extends MasterClass {
             else if(sm.state == "correct_self_middle" && sm.stateTime.milliseconds() > 300 )
             {
                 autoMethods.turnPDT(0,.30, 3000);
-                autoMethods.StrafeRight(.4, 700);
+                autoMethods.StrafeRight(.4, 550);
                 vision.StrafeRightVision("tower");
                 autoMethods.turnPDT(0, .2, 1000);
              //   autoMethods.turnPD(0,.2);
                 sm.ChangeState("shoot1");
             }
             else if (sm.state == "shoot1" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false, .45);
-                autoMethods.ShootY(false, .45);
-                autoMethods.ShootY(false, .45);
-                autoMethods.ShootY(false, .45);
-                sm.ChangeState("correct_self_right");
+                autoMethods.ShootY(false, .5);
+                autoMethods.ShootY(false, .5);
+                autoMethods.ShootY(false, .5);
+                autoMethods.ShootY(false, .5);
+                sm.ChangeState("forward");
             }
             else if (sm.state == "forward" && sm.stateTime.milliseconds() > 300) {
                 autoMethods.MoveInchEncoder(.3, 500);

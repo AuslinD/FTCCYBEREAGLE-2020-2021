@@ -332,18 +332,24 @@ public class AutoMethods {
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         WobbleFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        comp1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        comp2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //    wFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         WobbleFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        comp2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //   wFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         WobbleFlipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // wFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -354,6 +360,7 @@ public class AutoMethods {
         comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         clamp1.setPosition(.7);
         clamp2.setPosition(.8);
+        wClamp.setPosition(.1);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
