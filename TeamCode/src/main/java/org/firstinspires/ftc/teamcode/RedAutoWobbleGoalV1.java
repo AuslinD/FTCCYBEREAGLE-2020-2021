@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
 @Autonomous(name = "RedWobble", group = "Auto")
+@Disabled
 public class RedAutoWobbleGoalV1 extends MasterClass{
     @Override
     public void runOpMode() {

@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.ApplicationErrorReport;
+import android.os.BatteryManager;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.BatteryChecker;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -59,6 +63,7 @@ public class RedPowerShot extends MasterClass {
                 autoMethods.MoveInchEncoder(-.4,150);
                 sm.ChangeState("strafe_right_to_goal");
             }
+
             else if (sm.state == "strafe_right_to_goal" && sm.stateTime.milliseconds() > 300) {
                     autoMethods.turnPDT(0, .2, 1000);
                     vision.StrafeRightVision("tower");

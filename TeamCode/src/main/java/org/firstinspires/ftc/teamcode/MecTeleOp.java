@@ -100,6 +100,7 @@ public class MecTeleOp extends OpMode {
     {
         if (wClamped == true) {
             wClamp.setPosition(.7);
+
             wClamped = false; // it is not clamped
         } else
         {
