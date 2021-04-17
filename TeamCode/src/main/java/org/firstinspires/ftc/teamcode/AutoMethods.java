@@ -42,6 +42,8 @@ public class AutoMethods {
     double curDiff = 0;
     ElapsedTime wTime = new ElapsedTime();
     ElapsedTime turnTime = new ElapsedTime();
+    ElapsedTime flipperTime = new ElapsedTime();
+    double maxGy = 0;
 
 
 
@@ -160,6 +162,16 @@ public class AutoMethods {
     public void flipperZero(float speed)
     {
         while (flipper.getCurrentPosition() > -240)
+        {
+            flipper.setPower(speed);
+        }
+        flipper.setPower(0);
+    }
+
+    public void flipperUp(float speed, float timeout)
+    {
+        flipperTime.reset();
+        while (flipper.getCurrentPosition() < 100 && flipperTime.milliseconds() < timeout)
         {
             flipper.setPower(speed);
         }
@@ -291,7 +303,8 @@ public class AutoMethods {
         fr.setPower(0);
     }
 
-    public void Strafe(double speed){// positive speed is right
+    public void Strafe(double speed, double orientation, double val){// positive speed is right
+        double gyro = (getGyroYaw() - orientation) * val;
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -305,9 +318,9 @@ public class AutoMethods {
             speed = 1;
         }
         bl.setPower(speed);
-        fl.setPower(-speed);
+        fl.setPower(-speed - gyro);
         br.setPower(speed);
-        fr.setPower(-speed);
+        fr.setPower(-speed - gyro);
 
     }
 

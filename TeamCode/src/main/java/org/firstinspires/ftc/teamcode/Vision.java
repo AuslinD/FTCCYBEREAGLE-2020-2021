@@ -129,9 +129,9 @@ public class Vision{
             {
                 speed = .5;
             }
-            masterClass.autoMethods.Strafe(speed);
+            masterClass.autoMethods.Strafe(speed, 0, .035);
         }
-        masterClass.autoMethods.Strafe(0);
+        masterClass.autoMethods.Strafe(0, 0, .00);
     }
 
     public double CalcLeftRight(int x, int grace, String goal) throws InterruptedException
@@ -182,12 +182,15 @@ public class Vision{
             {
                 return power+.2;
             }
+
         }
         if (goal == "tower") {
-            power = ((width/4) - x) / 300;
+            power = (double)((190 - x) * .0025);
+            masterClass.telemetry.addData("power ", power);
+            masterClass.telemetry.addData("x ", x);
             if (x == 0)
             {
-                masterClass.telemetry.addData("power > 0 ", power);
+                masterClass.telemetry.addData("x nun ", power);
                 masterClass.telemetry.addData("x ", x);
                 masterClass.telemetry.update();
                 power = .07;
@@ -201,7 +204,7 @@ public class Vision{
             }
             else
             {
-                masterClass.telemetry.addData("power < 0 ", power);
+                masterClass.telemetry.addData("power >= 0 ", power);
                 masterClass.telemetry.addData("x ", x);
                 masterClass.telemetry.update();
                 return power+.2;
@@ -357,7 +360,7 @@ public class Vision{
             int xStart = w / 4;
             int xEnd = 3 * w / 4;
 
-            yStart = 0;//(int)(h/(1.0));
+            yStart = 0; // Maybe just 0 //(int)(h/(1.0));
             yEnd = h;
             xStart = 0;
             xEnd = w;
@@ -425,12 +428,12 @@ public class Vision{
             masterClass.telemetry.addData("ta", totalAvgY);
             masterClass.telemetry.addData("fy", firstY);
 
-            if (firstY - totalAvgY > fRing && firstY - totalAvgY < 45)
+            if (firstY - totalAvgY > fRing && firstY - totalAvgY < 45 && firstY > 230)
             {
                 masterClass.telemetry.addData("4", firstY-totalAvgY);
                 return 4;
             }
-            else if (firstY - totalAvgY > oRing && firstY - totalAvgY < 45)
+            else if (firstY - totalAvgY > oRing && firstY - totalAvgY < 45 && firstY > 190)
             {
                 masterClass.telemetry.addData("1", firstY-totalAvgY);
                 return 1;

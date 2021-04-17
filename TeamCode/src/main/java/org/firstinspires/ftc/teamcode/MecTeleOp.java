@@ -156,7 +156,9 @@ public class MecTeleOp extends OpMode {
         else
         {
             if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
+
                 pushReset = true;
+                moveFlipper(-.15, -50, 0);
                 comp1.setPower(.45 + upCount);
                 comp2.setPower(-.45 - upCount);
                 if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
@@ -303,16 +305,16 @@ public class MecTeleOp extends OpMode {
                 if (clampTime.milliseconds() < 500) {
                     push.setPosition(.28);
                     moveFlipper(-.2, -20, 0);
-                } else if (clampTime.milliseconds() < 1250) {
+                } else if (clampTime.milliseconds() < 1000) {
                     if (!clamped)
                         ClampA();
-                } else if (clampTime.milliseconds() < 2250) {
-                    moveFlipper(.3, 260, 0);
-                } else if (clampTime.milliseconds() < 2750) {
+                } else if (clampTime.milliseconds() < 1750) {
+                    moveFlipper(.6, 260, 0);
+                } else if (clampTime.milliseconds() < 2000) {
                     push.setPosition(.2);
                     if (clamped)
                         ClampA();
-                } else if (clampTime.milliseconds() < 3000) {
+                } else if (clampTime.milliseconds() < 2250) {
                     aActive = false;
                     firstFrame = true;
                 }
@@ -326,11 +328,11 @@ public class MecTeleOp extends OpMode {
         else if(gamepad2.b)
         {
             push.setPosition(.28);
-            moveFlipper(-.1, -50, 0);
+            moveFlipper(-.15, -50, 0);
         }
         else
         {
-            moveFlipper(.2, 230, 0);
+            moveFlipper(.3, 230, 0);
             if(clamped)
                 ClampA();
         }
@@ -350,7 +352,7 @@ public class MecTeleOp extends OpMode {
         }
         else if (gamepad2.left_trigger > .1)
         {
-            moveWobble(.3, 200, 5);
+            moveWobble(.5, 200, 5);
         }
         if (gamepad2.right_bumper)
         {
@@ -368,7 +370,7 @@ public class MecTeleOp extends OpMode {
         if(gamepad2.dpad_down && dPadWait.milliseconds() > 500)
         {
             dPadWait.reset();
-            upCount -= .02;
+            upCount -= .015;
             if (upCount < -.44f)
             {
                 upCount = -.44f;

@@ -37,80 +37,89 @@ public class RedPowerShot extends MasterClass {
                 {
                     numofZ += 1;
                 }
-                if(numofF > 3)
+                if(numofF > 2)
                 {
                     numDisks = 4;
                     sm.ChangeState("forward_until_white");
                 }
-                if(numofO > 3)
+                if(numofO > 2)
                 {
                     numDisks = 1;
                     sm.ChangeState("forward_until_white");
                 }
-                if(numofZ > 3)
+                if(numofZ > 2)
                 {
                     numDisks = 0;
                     sm.ChangeState("forward_until_white");
                 }
             }
             else if (sm.state == "forward_until_white"/* && sm.stateTime.milliseconds() > 300*/) {
-                autoMethods.MoveInchEncoder(.5,1700);
-                navigationMethods.forwardUntil(null, "white", .2);
+                autoMethods.MoveInchEncoder(.8,1750);
+                navigationMethods.forwardUntil(null, "white", .15);
+                autoMethods.MoveInchEncoder(-.4,150);
                 sm.ChangeState("strafe_right_to_goal");
             }
             else if (sm.state == "strafe_right_to_goal" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.turnPDT(-90, .4, 2000);
-                autoMethods.MoveInchEncoder(.7, 750);
+                    autoMethods.turnPDT(0, .2, 1000);
+                    vision.StrafeRightVision("tower");
+                    autoMethods.ShootY(false, .55);
+                    autoMethods.ShootY(false, .55);
+                    autoMethods.ShootY(false, .55);
+                    autoMethods.ShootY(false, .55);
+                if (numDisks != 4) {
+                    autoMethods.turnPDT(-90, .4, 2000);
+                }
                 sm.ChangeState("decide_path");
             }
             else if (sm.state == "decide_path" && sm.stateTime.milliseconds() > 300) {
                 if (numDisks == 0)
                 {
-                    autoMethods.turnPDT(-180, .7, 3500);
-                    autoMethods.moveWobble(-.4, -100, 1000);
+                    autoMethods.MoveInchEncoder(.7, 550);
+                    autoMethods.moveWobble(.4, 1000, 500);
                     autoMethods.setWobbleGoal(.7f);
-                    autoMethods.moveWobble(.4, 100, 1000);
-                    autoMethods.MoveInchEncoder(.4, 350);
-                    autoMethods.turnPDT(0,.55, 3000);
-                    sm.ChangeState("correct_self_middle");
+                    sm.ChangeState("set_flipper");
                 }
                 else if(numDisks == 1)
                 {
-                    autoMethods.moveWobble(-.4, -100, 1000);
+                    autoMethods.MoveInchEncoder(.7, 150);
+                    autoMethods.StrafeRight(.4, 800);
+                    autoMethods.moveWobble(.4, 1000, 1000);
                     autoMethods.setWobbleGoal(.7f);
-                    autoMethods.moveWobble(.4, 100, 1000);
                     autoMethods.StrafeRight(-.4, 700);
                     autoMethods.turnPDT(0, .7, 2000);
-                    sm.ChangeState("correct_self_middle");
+                    sm.ChangeState("forward");
                 }
                 else if(numDisks == 4)
                 {
-                    autoMethods.MoveInchEncoder(.3, 600);
-                    autoMethods.StrafeRight(.4, 1500);
-                    autoMethods.moveWobble(-.4, -100, 1000);
+                    autoMethods.MoveInchEncoder(.8, 2700);
+                    autoMethods.flipperUp(.4f, 1000);
+                    autoMethods.turnPDT(-180, .65, 3000);
+                    autoMethods.StrafeRight(.6, 400);
+                    autoMethods.moveWobble(.4, 1000, 500);
                     autoMethods.setWobbleGoal(.7f);
-                    autoMethods.moveWobble(.4, 100, 1000);
-                    autoMethods.MoveInchEncoder(-.3, 600);
-                    autoMethods.StrafeRight(-.4, 1800);
-                    autoMethods.MoveInchEncoder(-.3, 200);
-                    sm.ChangeState("correct_self_middle");
+                    autoMethods.moveWobble(-.4, -1000, 500);
+                    autoMethods.MoveInchEncoder(.8, 2300);
+                    sm.ChangeState("set_flipper");
                 }
             }
 
             else if(sm.state == "correct_self_middle" && sm.stateTime.milliseconds() > 300 )
             {
-                autoMethods.turnPDT(0,.30, 3000);
-                autoMethods.StrafeRight(.4, 550);
+                autoMethods.turnPDT(0,.40, 3000);
                 vision.StrafeRightVision("tower");
-                autoMethods.turnPDT(0, .2, 1000);
+                autoMethods.turnPDT(0, .15, 1000);
+                if (numDisks == 4)
+                {
+                    autoMethods.StrafeRight(.4, 775);
+                }
              //   autoMethods.turnPD(0,.2);
                 sm.ChangeState("shoot1");
             }
             else if (sm.state == "shoot1" && sm.stateTime.milliseconds() > 300) {
-                autoMethods.ShootY(false, .5);
-                autoMethods.ShootY(false, .5);
-                autoMethods.ShootY(false, .5);
-                autoMethods.ShootY(false, .5);
+                autoMethods.ShootY(false, .55);
+                autoMethods.ShootY(false, .55);
+                autoMethods.ShootY(false, .55);
+                autoMethods.ShootY(false, .55);
                 sm.ChangeState("forward");
             }
             else if (sm.state == "forward" && sm.stateTime.milliseconds() > 300) {
