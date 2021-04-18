@@ -154,6 +154,16 @@ public class AutoMethods {
         }
     }
 
+    public void ReturnMotorStrength()
+    {
+        comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        comp2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        comp1.setPower(1);
+        comp2.setPower(1);
+    }
+
     public void SetPush(float position)
     {
         push.setPosition(position);

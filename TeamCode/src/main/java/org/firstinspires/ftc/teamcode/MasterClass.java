@@ -9,23 +9,6 @@ public abstract class MasterClass extends LinearOpMode {
     NavigationMethods navigationMethods = null;
     StateMachine sm = null;
     Vision vision = null;
-    BatteryChecker batterychecker = null;
-    BatteryChecker.BatteryWatcher batterywatcher = null;
-
-
-    public class MyBatteryWatcher implements BatteryChecker.BatteryWatcher{
-        private Double percent = new Double(null);
-
-        @Override
-        public void updateBatteryStatus(BatteryChecker.BatteryStatus status){
-            this.percent = status.percent;
-        }
-        public double getPower() {
-            return this.percent == null ? 0.5 : this.percent.doubleValue() * -0.075 + 8;
-        }
-    }
-
-    //MecTeleOp mecTeleOp = null;
 
 
     public void Initialize()
@@ -36,8 +19,6 @@ public abstract class MasterClass extends LinearOpMode {
         vision = new Vision();
         sm = new StateMachine();
         //mecTeleOp = new MecTeleOp();
-        batterywatcher = new MyBatteryWatcher();
-        batterychecker = new BatteryChecker(batterywatcher, 1000);
 
         vision.initVision(this);
         navigationMethods.initNav(this);
