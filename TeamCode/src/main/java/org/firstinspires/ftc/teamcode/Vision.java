@@ -185,7 +185,7 @@ public class Vision{
 
         }
         if (goal == "tower") {
-            power = (double)((190 - x) * .0025);
+            power = (double)((200 - x) * .0025);
             masterClass.telemetry.addData("power ", power);
             masterClass.telemetry.addData("x ", x);
             if (x == 0)
@@ -433,7 +433,7 @@ public class Vision{
                 masterClass.telemetry.addData("4", firstY-totalAvgY);
                 return 4;
             }
-            else if (firstY - totalAvgY > oRing && firstY - totalAvgY < 45 && firstY > 190)
+            else if (firstY - totalAvgY > oRing && firstY - totalAvgY < 45 && firstY > 220)
             {
                 masterClass.telemetry.addData("1", firstY-totalAvgY);
                 return 1;

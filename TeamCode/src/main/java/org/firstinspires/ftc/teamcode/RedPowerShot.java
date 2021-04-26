@@ -66,22 +66,23 @@ public class RedPowerShot extends MasterClass {
 
             else if (sm.state == "strafe_right_to_goal" && sm.stateTime.milliseconds() > 300) {
                     autoMethods.turnPDT(0, .2, 1000);
-                    vision.StrafeRightVision("tower");
-                    autoMethods.ShootY(false, .55);
-                    autoMethods.ShootY(false, .55);
-                    autoMethods.ShootY(false, .55);
-                    autoMethods.ShootY(false, .55);
+                    vision.StrafeRightVision("tower");//0.55
+                    autoMethods.ShootY(false, .5);
+                    autoMethods.ShootY(false, .5);
+                    autoMethods.ShootY(false, .5);
+                    autoMethods.ShootY(false, .5);
                 if (numDisks != 4) {
-                    autoMethods.turnPDT(-90, .4, 2000);
+                    autoMethods.turnPDT(-90, .5, 2000);
                 }
                 sm.ChangeState("decide_path");
             }
             else if (sm.state == "decide_path" && sm.stateTime.milliseconds() > 300) {
                 if (numDisks == 0)
                 {
-                    autoMethods.MoveInchEncoder(.7, 550);
+                    autoMethods.MoveInchEncoder(1, 950);
                     autoMethods.moveWobble(.4, 1000, 500);
                     autoMethods.setWobbleGoal(.7f);
+                    autoMethods.MoveInchEncoder(-.5, 150);
                     sm.ChangeState("set_flipper");
                 }
                 else if(numDisks == 1)
@@ -99,7 +100,7 @@ public class RedPowerShot extends MasterClass {
                     autoMethods.MoveInchEncoder(.8, 2700);
                     autoMethods.flipperUp(.4f, 1000);
                     autoMethods.turnPDT(-180, .65, 3000);
-                    autoMethods.StrafeRight(.6, 400);
+                    autoMethods.StrafeRight(.6, 500);
                     autoMethods.moveWobble(.4, 1000, 500);
                     autoMethods.setWobbleGoal(.7f);
                     autoMethods.moveWobble(-.4, -1000, 500);

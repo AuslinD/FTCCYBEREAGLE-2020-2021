@@ -49,6 +49,7 @@ public class MecTeleOp extends OpMode {
     AutoMethods autoMethods = new AutoMethods();
     StateMachine stateMachine = new StateMachine();
     boolean finishedState = false;
+    int nextPush = 0;
 
 
     @Override
@@ -71,7 +72,6 @@ public class MecTeleOp extends OpMode {
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        WobbleFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         comp1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         comp2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -104,7 +104,7 @@ public class MecTeleOp extends OpMode {
             wClamped = false; // it is not clamped
         } else
         {
-            wClamp.setPosition(.15);
+            wClamp.setPosition(.1);
             wClamped = true;
         }
     }
@@ -128,6 +128,11 @@ public class MecTeleOp extends OpMode {
                 WobbleFlipper.setPower(0);
 
             }
+
+        }
+        else
+        {
+            WobbleFlipper.setPower(0);
         }
     }
 
@@ -156,30 +161,31 @@ public class MecTeleOp extends OpMode {
         }
         else
         {
-            if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
 
-                pushReset = true;
-                moveFlipper(-.15, -50, 0);
-                comp1.setPower(.45 + upCount);
-                comp2.setPower(-.45 - upCount);
-                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
-                    push.setPosition(.45);
+                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 < curTargetComp) {
+
+                    pushReset = true;
+                    moveFlipper(-.15, -50, 0);
+                    comp1.setPower(.45 + upCount);
+                    comp2.setPower(-.45 - upCount);
+                    if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 1000) {
+                        push.setPosition(.45);
+                    }
+                    if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 550) {
+                        push.setPosition(.2);
+                    }
+                    if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 100) {
+                        push.setPosition(.28);
+                    }
                 }
-                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 550) {
-                    push.setPosition(.2);
-                }
-                if ((Math.abs(comp1.getCurrentPosition()) + Math.abs(comp2.getCurrentPosition())) / 2 > curTargetComp - 100) {
-                    push.setPosition(.28);
+                else {
+
+                    curTargetComp += 2500;
+                    pushReset = false;
+                    comp1.setPower(0);
+                    comp2.setPower(0);
                 }
             }
-            else {
-
-                curTargetComp += 2500;
-                pushReset = false;
-                comp1.setPower(0);
-                comp2.setPower(0);
-            }
-        }
     }
 
 
@@ -305,12 +311,12 @@ public class MecTeleOp extends OpMode {
                 }
                 if (clampTime.milliseconds() < 500) {
                     push.setPosition(.28);
-                    moveFlipper(-.2, -20, 0);
+                    moveFlipper(-.2, -2000, 0);
                 } else if (clampTime.milliseconds() < 1000) {
                     if (!clamped)
                         ClampA();
                 } else if (clampTime.milliseconds() < 1750) {
-                    moveFlipper(.6, 260, 0);
+                    moveFlipper(.6, 2600, 0);
                 } else if (clampTime.milliseconds() < 2000) {
                     push.setPosition(.2);
                     if (clamped)
@@ -329,18 +335,24 @@ public class MecTeleOp extends OpMode {
         else if(gamepad2.b)
         {
             push.setPosition(.28);
-            moveFlipper(-.15, -50, 0);
+            moveFlipper(-.15, -5000, 0);
         }
         else
         {
-            moveFlipper(.3, 230, 0);
+            moveFlipper(.3, 1000, 0);
             if(clamped)
                 ClampA();
         }
 
         if ((gamepad2.y || pushReset))
         {
-            ShootY(true);
+           // if (gamepad2.left_stick_y > .01)
+          //  {
+            //    ShootY(true, 500);
+          //  }
+           // else {
+                ShootY(true);
+           // }
         }
         if (gamepad2.left_bumper && wobbleTime.milliseconds() > 500)
         {
@@ -349,11 +361,15 @@ public class MecTeleOp extends OpMode {
         }
         if (gamepad2.right_trigger > .1)
         {
-                moveWobble(-1, -200, 5);
+                moveWobble(-1, -1000, 5);
         }
         else if (gamepad2.left_trigger > .1)
         {
-            moveWobble(.5, 200, 5);
+            moveWobble(.75, 1000, 5);
+        }
+        else
+        {
+            moveWobble(0,1000,5);
         }
         if (gamepad2.right_bumper)
         {
@@ -423,6 +439,8 @@ public class MecTeleOp extends OpMode {
         }
         */
         telemetry.addData("pusher", push.getPosition());
+        telemetry.addData("wobble arm", WobbleFlipper.getCurrentPosition());
+        telemetry.addData("flipper", flipper.getCurrentPosition());
         telemetry.update();
 
 
