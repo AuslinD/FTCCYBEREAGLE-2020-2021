@@ -43,6 +43,7 @@ public class AutoMethods {
     ElapsedTime wTime = new ElapsedTime();
     ElapsedTime turnTime = new ElapsedTime();
     ElapsedTime flipperTime = new ElapsedTime();
+    ElapsedTime speedTime = new ElapsedTime();
     double maxGy = 0;
 
 
@@ -154,14 +155,23 @@ public class AutoMethods {
         }
     }
 
-    public void ReturnMotorStrength()
+    public float ReturnMotorStrength()
     {
         comp1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         comp2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         comp1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         comp2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        comp1.setPower(1);
-        comp2.setPower(1);
+        speedTime.reset();
+        while (speedTime.milliseconds() < 1000) {
+            comp2.setPower(.55);
+        }
+        float spinRate = ((comp2.getCurrentPosition()) - 650) * .005f;
+        float grossPower = .6f * spinRate + .3f;
+        float truePower = .9f - (grossPower - .3f);
+        masterClass.telemetry.addData("motor values", (comp2.getCurrentPosition()));
+        masterClass.telemetry.addData("gross power", grossPower);
+        return truePower;
+        // .9 = 1600, .3 = 8000
     }
 
     public void SetPush(float position)

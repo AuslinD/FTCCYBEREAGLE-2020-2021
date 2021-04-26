@@ -50,6 +50,7 @@ public class MecTeleOp extends OpMode {
     StateMachine stateMachine = new StateMachine();
     boolean finishedState = false;
     int nextPush = 0;
+    boolean exceeds = false;
 
 
     @Override
@@ -354,22 +355,37 @@ public class MecTeleOp extends OpMode {
                 ShootY(true);
            // }
         }
+        moveWobble(0,1000,5);
         if (gamepad2.left_bumper && wobbleTime.milliseconds() > 500)
         {
             wobbleTime.reset();
             ClampWobble();
         }
-        if (gamepad2.right_trigger > .1)
+        if (gamepad2.right_trigger > .1 && !exceeds)
         {
-                moveWobble(-1, -1000, 5);
+                moveWobble(-.5, -1000, 5);
         }
-        else if (gamepad2.left_trigger > .1)
+        else if (gamepad2.left_trigger > .1 && !exceeds)
         {
-            moveWobble(.75, 1000, 5);
+            moveWobble(.5, 1000, 5);
         }
-        else
+        if (WobbleFlipper.getCurrentPosition() < -390)
         {
-            moveWobble(0,1000,5);
+            moveWobble(.3, 1000, 5);
+            telemetry.addData("aqui < -390", WobbleFlipper.getCurrentPosition());
+            exceeds = true;
+        }
+        else    {
+            exceeds = false;
+        }
+        if (WobbleFlipper.getCurrentPosition() > 5)
+        {
+            telemetry.addData("aqui > 90", WobbleFlipper.getCurrentPosition());
+            moveWobble(-.3, -1000, 5);
+            exceeds = true;
+        }
+        else{
+            exceeds = false;
         }
         if (gamepad2.right_bumper)
         {

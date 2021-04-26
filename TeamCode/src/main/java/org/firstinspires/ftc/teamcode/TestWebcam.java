@@ -41,13 +41,19 @@ public class TestWebcam extends MasterClass {
 
         sm.ChangeState("webcam_Test");
 
+        float power = autoMethods.ReturnMotorStrength();
+        telemetry.addData("power ", power);
 
+
+        telemetry.update();
         while (opModeIsActive() && !isStopRequested()) {
             if(sm.state == "webcam_Test") {
+<<<<<<< HEAD
                 vision.StrafeRightVision("tower");
 
+=======
+>>>>>>> e3a2baeb8aadcb87358fe33ae0c5b0718ef669e9
 
-               telemetry.update();
             }
 
 
