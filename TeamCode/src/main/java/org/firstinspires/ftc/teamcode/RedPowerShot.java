@@ -80,7 +80,7 @@ public class RedPowerShot extends MasterClass {
                 if (numDisks == 0)
                 {
                     autoMethods.MoveInchEncoder(1, 950);
-                    autoMethods.moveWobble(.4, 1000, 500);
+                    autoMethods.moveWobble(.4, 257, 500);
                     autoMethods.setWobbleGoal(.7f);
                     autoMethods.MoveInchEncoder(-.5, 150);
                     sm.ChangeState("set_flipper");
@@ -104,6 +104,7 @@ public class RedPowerShot extends MasterClass {
                     autoMethods.moveWobble(.4, 1000, 500);
                     autoMethods.setWobbleGoal(.7f);
                     autoMethods.moveWobble(-.4, -1000, 500);
+
                     autoMethods.MoveInchEncoder(.8, 2300);
                     sm.ChangeState("set_flipper");
                 }

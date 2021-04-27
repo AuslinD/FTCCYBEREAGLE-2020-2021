@@ -414,6 +414,7 @@ public class AutoMethods {
     public void moveWobble(double power, int targetEncoder, int timeout) {
         WobbleFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         WobbleFlipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         wTime.reset();
         if (power < 0) {
             while (WobbleFlipper.getCurrentPosition() > targetEncoder && wTime.milliseconds() < timeout) {
@@ -425,7 +426,7 @@ public class AutoMethods {
                     WobbleFlipper.setPower(0);
 
                 }
-                masterClass.telemetry.addData("", WobbleFlipper.getCurrentPosition());
+                masterClass.telemetry.addData("WobblePosition", WobbleFlipper.getCurrentPosition());
                 masterClass.telemetry.update();
             }
         } else if (power > 0) {
@@ -438,10 +439,11 @@ public class AutoMethods {
                     WobbleFlipper.setPower(0);
 
                 }
-                masterClass.telemetry.addData("", WobbleFlipper.getCurrentPosition());
+                masterClass.telemetry.addData("WobblePosition", WobbleFlipper.getCurrentPosition());
                 masterClass.telemetry.update();
             }
         }
+        masterClass.telemetry.update();
     }
 
 }
