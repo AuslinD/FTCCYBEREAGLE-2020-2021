@@ -92,8 +92,7 @@ public class RedPowerShot extends MasterClass {
                     autoMethods.moveWobble(.4, 1000, 1000);
                     autoMethods.setWobbleGoal(.7f);
                     autoMethods.StrafeRight(-.4, 700);
-                    autoMethods.turnPDT(0, .7, 2000);
-                    sm.ChangeState("forward");
+                    sm.ChangeState("set_flipper");
                 }
                 else if(numDisks == 4)
                 {
@@ -103,7 +102,7 @@ public class RedPowerShot extends MasterClass {
                     autoMethods.StrafeRight(.6, 500);
                     autoMethods.moveWobble(.4, 1000, 500);
                     autoMethods.setWobbleGoal(.7f);
-                    autoMethods.moveWobble(-.4, -1000, 500);
+                    autoMethods.StrafeRight(-.6, 500);
 
                     autoMethods.MoveInchEncoder(.8, 2300);
                     sm.ChangeState("set_flipper");

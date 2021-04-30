@@ -51,6 +51,7 @@ public class MecTeleOp extends OpMode {
     boolean finishedState = false;
     int nextPush = 0;
     boolean exceeds = false;
+    boolean useEncoder = true;
 
 
     @Override
@@ -369,7 +370,7 @@ public class MecTeleOp extends OpMode {
         {
             moveWobble(.5, 1000, 5);
         }
-        if (WobbleFlipper.getCurrentPosition() < -390)
+        if (WobbleFlipper.getCurrentPosition() < -390 && useEncoder)
         {
             moveWobble(.3, 1000, 5);
             telemetry.addData("aqui < -390", WobbleFlipper.getCurrentPosition());
@@ -378,7 +379,7 @@ public class MecTeleOp extends OpMode {
         else    {
             exceeds = false;
         }
-        if (WobbleFlipper.getCurrentPosition() > 5)
+        if (WobbleFlipper.getCurrentPosition() > 5 && useEncoder)
         {
             telemetry.addData("aqui > 90", WobbleFlipper.getCurrentPosition());
             moveWobble(-.3, -1000, 5);
@@ -410,7 +411,14 @@ public class MecTeleOp extends OpMode {
             }
         }
         telemetry.addData("upCount ", upCount);
-
+        if (gamepad2.left_stick_y < -.5)
+        {
+            useEncoder = false;
+        }
+        else
+        {
+            useEncoder = true;
+        }
 
 
 
